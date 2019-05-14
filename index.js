@@ -61,10 +61,6 @@ export const getGetterAsyncProps = (state, props) => {
   return newAsyncProps
 }
 
-export const applyAuth = url => {
-  return url
-}
-
 /**
  * Create a set of basic async actions
  * @param {string} storePath unique identifier for the store
