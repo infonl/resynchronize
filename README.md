@@ -53,7 +53,7 @@ To create 'async actions' we use `createAsyncActions`: this creates a set of 4 a
 const getListAction = createAsyncActions('GET_LIST')
 ```
 
-## Step II
+### Step II
 With this action object (the actions are inside as properties) and a simple `thunk` we set up a method that uses this actions on the right moment, example:
 
 ```
