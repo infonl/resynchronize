@@ -1,4 +1,4 @@
-# RESYNCHRONIZE
+# RESYNCHRONIZE :WIP:
 
 Simple library/bunch of functionalities/*bunch of notes* on files to fetch/promise async payloads and put a meaninful state for your appplication
 
