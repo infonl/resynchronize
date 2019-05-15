@@ -10,19 +10,19 @@ This tries to follow the standards put on place by the creators of redux, but it
 ## Requirements
 - `lodash` well who doesn't need a buch of extremely useful and handy functions to build another useful functions on top of it?
 - `redux-starter-kit` If you want it easy (*that's probably why you are here*) and offcial this is your library, includes:
-- `redux` Where you store the magical/not-as-magical-as-you-though async nodes
   - `redux-thunk` Your redux state need some way to dispatch actions from.. another dispatch :surprise:
   - Some Inmutability control
   - Functions to create actions and reducers
   - Easy configurations for redux store
   - Selectors *just in case*
   - A set of default goodies that almost every setup uses
+- `redux` Where you store the magical/not-as-magical-as-you-though async nodes
 - `react-redux` It's required to use the functionalties with react :shrug:
 
 ## Further details
 
 Every async node has the same shape:
-```
+```javascript
 {
   status: 'START',
   payload: null,
@@ -49,21 +49,23 @@ The flow is as usual, create actions, set up reducers, dispatch said actions, bu
 ### Step I
 To create 'async actions' we use `createAsyncActions`: this creates a set of 4 actions to follow the natural state of any asynchronous action: `START`, `DONE`, `ERROR` and `RESET`
 
-```
+```javascript
 const getListAction = createAsyncActions('GET_LIST')
 ```
 
 ### Step II
 With this action object (the actions are inside as properties) and a simple `thunk` we set up a method that uses this actions on the right moment, example:
 
-```
+```javascript
 const getListAction = createAsyncActions('GET_LIST')
 
 const getList = (dispatch, getState) =>
+  // Started! it will take a moment, promise!
   dispatch(getListAction.START())
+
   fetch('http://random.api.com/list')
-    .then(response => dispatch(getListAction.DONE(response)))
-    .catch(exception => dispatch(getListAction.ERROR(exception)))
+    .then(response => dispatch(getListAction.DONE(response))) // Done! there you have your stuff!
+    .catch(exception => dispatch(getListAction.ERROR(exception))) // Error!
 
 const resetList = (dispatch, getState) => {
   dispatch(getListAction.RESET())
@@ -77,13 +79,13 @@ This example can be used to create different sets of thunks that add controls or
 ### Step III
 With the async action object and the method `createAsyncReducer` we create the reducer for this actions, by default anything that comes as a result of the `DONE` action will be used as payload and any `ERROR` will fill the `error` property
 
-```
+```javascript
 const listReducer = createAsyncReducer(getListAction)
 ```
 
 The `createAsyncReducer` also receives a second argument, you can pass an object to further decide what to do with your payload when you receive it, example:
 
-```
+```javascript
 const listReducer = createAsyncReducer(getListAction, {
   done: (state, { payload }) => payload.filter(item => !item.valid)
 })
@@ -96,7 +98,7 @@ In this case we enhance the `done` reducer filtering anything that is not valid 
 ## How to set up this in my React components
 Assuming that you already put on place `react-redux` the connection with this async nodes is simple as:
 
-```
+```javascript
 import { connect } from 'react-redux'
 import { getList } from '../my-actions'
 
