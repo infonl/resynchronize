@@ -41,6 +41,7 @@ Along with this shape there are functions to retrieve readable/understandable/co
   - `loading`
   - `done`
   - `error`
+- `getGetterAsyncProps` serves as `map state to props` function using the `getter` prop on the component to get the async props
 
 ## How to set up Redux to use this beauties
 
@@ -98,6 +99,7 @@ In this case we enhance the `done` reducer filtering anything that is not valid 
 ## How to set up this in my React components
 Assuming that you already put on place `react-redux` the connection with this async nodes is simple as:
 
+### THE example
 ```javascript
 import { connect } from 'react-redux'
 import { getList } from '../my-actions'
@@ -139,3 +141,55 @@ const myAwesomeComponent = connector(_myAwesomeComponent)
 ```
 
 The method `getAsyncProperties` allows to get a meaninful set of properties that you can use to render the diferent async states on your component and the thunk created before allows you to dispatch the actions that start the async promise.
+
+### When you dont like to repeat the same connector everywhere
+
+As an extra sweet cherry on top you can the `getGetterAsyncProps`. This method allows you to connect any async node from state just puttin a `getter` prop in the connected component. Using the previous example:
+
+```javascript
+import { connect } from 'react-redux'
+import { getList } from '../my-actions'
+
+const connector = connect(
+  getGetterAsyncProps,
+  dispatch => ({
+    dispatch,
+    getMyList: () => dispatch(getList)
+  })
+)
+
+const _MyAwesomeComponent = ({
+  listItems: { done, loading, payload },
+  getMyList
+}) => (
+  <div>
+    <button onClick={getMyList} disabled={loading}>
+      Get items!
+    </button>
+    <ul>
+      {loading && (
+        <span>
+          Loading items...
+        </span>
+      )}
+      {done && payload.map(item => (
+        <li>
+          {item.name}
+        </li>
+      ))}
+    </ul>
+  </div>
+)
+
+const MyAwesomeComponent = connector(_MyAwesomeComponent)
+```
+
+And when you use it
+
+```javascript
+import MyAwesomeComponent from '../MyAwesomeComponent'
+
+const myApp = () => (
+  <MyAwesomeComponent getter={state => ({ listItems: myList })} />
+)
+```
