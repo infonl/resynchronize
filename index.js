@@ -1,4 +1,4 @@
-import _ from 'lodash'
+import get from 'lodash/get'
 import { createAction, createReducer } from 'redux-starter-kit'
 
 /**
@@ -30,10 +30,10 @@ const getAsyncKeys = getter => {
 }
 
 // Basic set of functions to manage the state of async actions and reducers
-export const isDone = asyncStatus => _.get(asyncStatus, 'status', null) === 'DONE'
-export const hasError = asyncStatus => _.get(asyncStatus, 'status', null) === 'ERROR'
-export const isLoading = asyncStatus => _.get(asyncStatus, 'status', null) === 'START'
-export const getPayload = asyncStatus => _.get(asyncStatus, 'payload', null)
+export const isDone = asyncStatus => get(asyncStatus, 'status', null) === 'DONE'
+export const hasError = asyncStatus => get(asyncStatus, 'status', null) === 'ERROR'
+export const isLoading = asyncStatus => get(asyncStatus, 'status', null) === 'START'
+export const getPayload = asyncStatus => get(asyncStatus, 'payload', null)
 
 /**
  * Gets the async state properties for connection
