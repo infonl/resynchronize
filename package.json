@@ -30,6 +30,7 @@
     "lint": "standard .",
     "test": "jest",
     "test:init": "jest --init",
-    "test:watch": "npm test -- --watch"
+    "test:watch": "npm test -- --watch",
+    "test:cov": "npm test -- --coverage"
   }
 }

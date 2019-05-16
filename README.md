@@ -33,7 +33,7 @@ Every async node has the same shape:
 Along with this shape there are functions to retrieve readable/understandable/comparable properties, they use the state node as argument and return a boolean:
 
 - `isDone` if the request/promise is done
-- `hasError` if has errors, returns the error object
+- `getError` if has errors, returns the error object
 - `isLoading` if is still pending
 - `getPayload` gets the payload, is not dependant of the previous methods, can be used anytime
 - `getAsyncProperties` returns an object with all the properties set of the node:

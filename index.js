@@ -30,9 +30,9 @@ const getAsyncKeys = getter => {
 }
 
 // Basic set of functions to manage the state of async actions and reducers
-export const isDone = asyncStatus => get(asyncStatus, 'status', null) === 'DONE'
-export const hasError = asyncStatus => get(asyncStatus, 'status', null) === 'ERROR'
-export const isLoading = asyncStatus => get(asyncStatus, 'status', null) === 'START'
+export const isDone = asyncStatus => get(asyncStatus, 'status', false) === 'DONE'
+export const getError = asyncStatus => get(asyncStatus, 'status', false) === 'ERROR' && get(asyncStatus, 'error', null)
+export const isLoading = asyncStatus => get(asyncStatus, 'status', false) === 'START'
 export const getPayload = asyncStatus => get(asyncStatus, 'payload', null)
 
 /**
@@ -40,10 +40,10 @@ export const getPayload = asyncStatus => get(asyncStatus, 'payload', null)
  * @param {object} asyncProp Async state property
  */
 export const getAsyncProperties = (asyncProp) => ({
-  payoad: getPayload(asyncProp),
+  payload: getPayload(asyncProp),
   loading: isLoading(asyncProp),
   done: isDone(asyncProp),
-  error: hasError(asyncProp)
+  error: getError(asyncProp)
 })
 
 export const getGetterAsyncProps = (state, props) => {
