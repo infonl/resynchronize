@@ -19,12 +19,17 @@
     "redux-starter-kit": "^0.5.1"
   },
   "devDependencies": {
+    "@babel/core": "^7.4.4",
+    "@babel/preset-env": "^7.4.4",
+    "@types/jest": "^24.0.13",
+    "babel-jest": "^24.8.0",
     "jest": "^24.8.0",
     "standard": "^12.0.1"
   },
   "scripts": {
     "lint": "standard .",
     "test": "jest",
+    "test:init": "jest --init",
     "test:watch": "npm test -- --watch"
   }
 }
