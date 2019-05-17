@@ -92,7 +92,21 @@ const listReducer = createAsyncReducer(getListAction, {
 })
 ```
 
-In this case we enhance the `done` reducer filtering anything that is not valid on our list payload, but it is possible to enhance every other reducer using `start`, `reset` and `error`
+In this case we enhance the `done` reducer filtering anything that is not valid on our list payload, it is also possible to enhance every other reducer using `start`, `reset` and `error`
+
+If you want to reduce multiple asyncActions with the same reducer is simple as sending a key -> action object shaped as the first argument:
+
+```javascript
+const listReducer = createAsyncReducer(
+  {
+    getListAction,
+    refreshListAction
+  },
+  {
+    done: (state, { payload }) => payload.filter(item => !item.valid)
+  }
+)
+```
 
 *Aaaaaand that's it, there you have a simple set up for your async actions on place, but wait.. there is more*
 
