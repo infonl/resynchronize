@@ -33,10 +33,10 @@ Every async node has the same shape:
 Along with this shape there are functions to retrieve readable/understandable/comparable properties, they use the state node as argument and return a boolean:
 
 - `isDone` if the request/promise is done
-- `getError` if has errors, returns the error object
 - `isLoading` if is still pending
+- `getError` if has errors, returns the error object
 - `getPayload` gets the payload, is not dependant of the previous methods, can be used anytime
-- `getAsyncProperties` returns an object with all the properties set of the node:
+- `getAsyncProps` returns an object with all the properties set of the node:
   - `payoad`
   - `loading`
   - `done`
@@ -120,7 +120,7 @@ import { getList } from '../my-actions'
 
 const connector = connect(
   state => ({
-    listItems: getAsyncProperties(state.myList)
+    listItems: getAsyncProps(state.myList)
   }),
   dispatch => ({
     dispatch,
@@ -154,7 +154,7 @@ const _myAwesomeComponent = ({
 const myAwesomeComponent = connector(_myAwesomeComponent)
 ```
 
-The method `getAsyncProperties` allows to get a meaninful set of properties that you can use to render the diferent async states on your component and the thunk created before allows you to dispatch the actions that start the async promise.
+The method `getAsyncProps` allows to get a meaninful set of properties that you can use to render the diferent async states on your component and the thunk created before allows you to dispatch the actions that start the async promise.
 
 ### When you dont like to repeat the same connector everywhere
 
