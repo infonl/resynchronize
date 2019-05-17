@@ -8,16 +8,9 @@ This tries to follow the standards put on place by the creators of redux, but it
 
 
 ## Requirements
-- `lodash` well who doesn't need a buch of extremely useful and handy functions to build another useful functions on top of it?
-- `redux-starter-kit` If you want it easy (*that's probably why you are here*) and offcial this is your library, includes:
-  - `redux-thunk` Your redux state need some way to dispatch actions from.. another dispatch :surprise:
-  - Some Inmutability control
-  - Functions to create actions and reducers
-  - Easy configurations for redux store
-  - Selectors *just in case*
-  - A set of default goodies that almost every setup uses
 - `redux` Where you store the magical/not-as-magical-as-you-though async nodes
-- `react-redux` It's required to use the functionalties with react :shrug:
+- `redux-thunk` Your redux state need some way to dispatch actions from.. another dispatch :surprise:
+- `react-redux` It's required to use the functionalties with react
 
 ## Further details
 
