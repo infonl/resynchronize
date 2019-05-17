@@ -1,12 +1,29 @@
 /* global test, expect, describe */
 const resynchronize = require('.')
 
-test('createAsyncActions returns an object with 3 actions', () => {
+describe('createAsyncActions', () => {
   const actions = resynchronize.createAsyncActions('TEST')
-  expect(actions).toHaveProperty('START')
-  expect(actions).toHaveProperty('DONE')
-  expect(actions).toHaveProperty('ERROR')
-  expect(actions).toHaveProperty('RESET')
+
+  test('returns an object with 3 actions', () => {
+    expect(actions).toHaveProperty('START')
+    expect(actions).toHaveProperty('DONE')
+    expect(actions).toHaveProperty('ERROR')
+    expect(actions).toHaveProperty('RESET')
+  })
+
+  test('properties stringified return the concatenation', () => {
+    expect(`${actions.START}`).toBe('START_TEST')
+    expect(`${actions.DONE}`).toBe('DONE_TEST')
+    expect(`${actions.ERROR}`).toBe('ERROR_TEST')
+    expect(`${actions.RESET}`).toBe('RESET_TEST')
+  })
+
+  test('properties type return the concatenation too', () => {
+    expect(actions.START.type).toBe('START_TEST')
+    expect(actions.DONE.type).toBe('DONE_TEST')
+    expect(actions.ERROR.type).toBe('ERROR_TEST')
+    expect(actions.RESET.type).toBe('RESET_TEST')
+  })
 })
 
 test('getAsyncProperties returns an object with 4 basic properties', () => {
@@ -16,6 +33,33 @@ test('getAsyncProperties returns an object with 4 basic properties', () => {
   expect(properties).toHaveProperty('loading')
   expect(properties).toHaveProperty('done')
   expect(properties).toHaveProperty('error')
+})
+
+test('createAsyncReducerConfig returns a collection of actions', () => {
+  const actions = resynchronize.createAsyncActions('TEST')
+  const reducerConfig = resynchronize.createAsyncReducerConfig(actions)
+
+  expect(reducerConfig).toHaveProperty('START_TEST')
+  expect(reducerConfig).toHaveProperty('DONE_TEST')
+  expect(reducerConfig).toHaveProperty('ERROR_TEST')
+  expect(reducerConfig).toHaveProperty('RESET_TEST')
+})
+
+test('createAsyncReducerConfig returns a sumarized collection of actions', () => {
+  const actions = resynchronize.createAsyncActions('TEST')
+  const actions2 = resynchronize.createAsyncActions('TEST2')
+  const reducerConfig = resynchronize.createAsyncReducerConfig({
+    actions,
+    actions2
+  })
+  expect(reducerConfig).toHaveProperty('START_TEST')
+  expect(reducerConfig).toHaveProperty('DONE_TEST')
+  expect(reducerConfig).toHaveProperty('ERROR_TEST')
+  expect(reducerConfig).toHaveProperty('RESET_TEST')
+  expect(reducerConfig).toHaveProperty('START_TEST2')
+  expect(reducerConfig).toHaveProperty('DONE_TEST2')
+  expect(reducerConfig).toHaveProperty('ERROR_TEST2')
+  expect(reducerConfig).toHaveProperty('RESET_TEST2')
 })
 
 describe('initial state', () => {

@@ -62,19 +62,24 @@ export const getGetterAsyncProps = (state, props) => {
 }
 
 /**
- * Create a set of basic async actions
- * @param {string} storePath unique identifier for the store
+ * Basic async actions structure
+ * @param {string} storeKey unique identifier for the store
  */
-export const createAsyncActions = storePath => ({
-  START: createAction(`START_${storePath}`),
-  DONE: createAction(`DONE_${storePath}`),
-  ERROR: createAction(`ERROR_${storePath}`),
-  RESET: createAction(`RESET_${storePath}`)
-})
+function AsyncActions (storeKey) {
+  this.START = createAction(`START_${storeKey}`)
+  this.DONE = createAction(`DONE_${storeKey}`)
+  this.ERROR = createAction(`ERROR_${storeKey}`)
+  this.RESET = createAction(`RESET_${storeKey}`)
+  this.toString = () => storeKey
+}
+
+/**
+ * Create a set of basic async actions using a unique identifier
+ * @param {string} storeKey unique identifier for the store
+ */
+export const createAsyncActions = storeKey => new AsyncActions(storeKey)
 
 const ASYNC_INITIAL_STATE = { status: null, payload: null, error: null }
-
-export const defaultReducer = (state, { payload }) => payload || state || null
 
 /**
  * Handlers for async actions
@@ -106,14 +111,14 @@ const handleReset = reducer => (state, action) => ({
   error: null
 })
 
+/** default reducer for async handling */
+export const defaultReducer = (state, { payload }) => payload || state || null
+
 /**
  * Basic action handler creator for async actions
  * @param {object} actions Async actions
  */
-const createActionsHandler = (
-  actions,
-  { start, done, reset, error } = {}
-) => ({
+const createActionsHandler = (actions, { start, done, reset, error } = {}) => ({
   [actions.START]: handleStart(start || defaultReducer),
   [actions.DONE]: handleDone(done || defaultReducer),
   [actions.ERROR]: handleError(error || defaultReducer),
@@ -121,22 +126,37 @@ const createActionsHandler = (
 })
 
 /**
- * Create a reducer to handle async actions
+ * Create a reducer config to handle async actions
  * @param {*} asyncActions Set of actions that include every state of a fetch process
+ * @param {*} asyncHandlers Set of action reducers
+ * @returns {object} config to be used on a reducer
  */
-export const createAsyncReducer = (asyncActions, asyncHandlers) => {
+export const createAsyncReducerConfig = (asyncActions, asyncHandlers) => {
   let config = {}
-  // If is an array of async actions all of them are put into the main reducer
-  if (Array.isArray(asyncActions)) {
-    asyncActions.forEach(actions => {
+
+  // If isnt an AsyncActions all the keys of the object are put into the main reducer
+  if (AsyncActions.prototype.isPrototypeOf(asyncActions)) {
+    config = createActionsHandler(asyncActions, asyncHandlers)
+  } else {
+    Object.keys(asyncActions).forEach(actionKey => {
       config = {
         ...config,
-        ...createActionsHandler(actions, asyncHandlers)
+        ...createActionsHandler(asyncActions[actionKey], asyncHandlers)
       }
     })
-  } else {
-    config = createActionsHandler(asyncActions, asyncHandlers)
   }
 
-  return createReducer(ASYNC_INITIAL_STATE, config)
+  return config
 }
+
+/**
+ * Create a reducer function to handle async actions
+ * @param {*} asyncActions Set of actions that include every state of a fetch process
+ * @param {*} asyncHandlers Set of action reducers
+ * @returns {function} async reducer
+ */
+export const createAsyncReducer = (asyncActions, asyncHandlers) =>
+  createReducer(
+    ASYNC_INITIAL_STATE,
+    createAsyncReducerConfig(asyncActions, asyncHandlers)
+  )
