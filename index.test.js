@@ -1,6 +1,29 @@
 /* global test, expect, describe */
 const resynchronize = require('.')
 
+describe('createAction', () => {
+  const action = resynchronize.createAction('TEST')
+
+  test('can be stringified to its type', () => {
+    expect(`${action}`).toBe('TEST')
+    expect(`${action.type}`).toBe('TEST')
+  })
+
+  test('when called returns an object with type and payload', () => {
+    const dispatchable = action()
+    expect(dispatchable).toHaveProperty('type')
+    expect(dispatchable.type).toBe('TEST')
+    expect(dispatchable.payload).toBe(null)
+  })
+
+  test('when called with an argument returns an object with type and the argument as payload', () => {
+    const dispatchable = action('something')
+    expect(dispatchable).toHaveProperty('type')
+    expect(dispatchable.type).toBe('TEST')
+    expect(dispatchable.payload).toBe('something')
+  })
+})
+
 describe('createAsyncActions', () => {
   const actions = resynchronize.createAsyncActions('TEST')
 

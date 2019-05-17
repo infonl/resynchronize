@@ -1,5 +1,24 @@
-import get from 'lodash/get'
-import { createAction, createReducer } from 'redux-starter-kit'
+const get = (asyncNode, property, defaultValue) => {
+  const result = asyncNode == null ? undefined : asyncNode[property]
+  return result === undefined ? defaultValue : result
+}
+
+// Basic set of functions to manage the state of async actions and reducers
+export const isDone = asyncStatus => get(asyncStatus, 'status', false) === 'DONE'
+export const getError = asyncStatus => get(asyncStatus, 'status', false) === 'ERROR' && get(asyncStatus, 'error', null)
+export const isLoading = asyncStatus => get(asyncStatus, 'status', false) === 'START'
+export const getPayload = asyncStatus => get(asyncStatus, 'payload', null)
+
+/**
+ * Gets the async state properties for connection
+ * @param {object} asyncProp Async state property
+ */
+export const getAsyncProperties = (asyncProp) => ({
+  payload: getPayload(asyncProp),
+  loading: isLoading(asyncProp),
+  done: isDone(asyncProp),
+  error: getError(asyncProp)
+})
 
 /**
  * Fuses in one property the given argument properties
@@ -29,23 +48,6 @@ const getAsyncKeys = getter => {
   return asyncProps
 }
 
-// Basic set of functions to manage the state of async actions and reducers
-export const isDone = asyncStatus => get(asyncStatus, 'status', false) === 'DONE'
-export const getError = asyncStatus => get(asyncStatus, 'status', false) === 'ERROR' && get(asyncStatus, 'error', null)
-export const isLoading = asyncStatus => get(asyncStatus, 'status', false) === 'START'
-export const getPayload = asyncStatus => get(asyncStatus, 'payload', null)
-
-/**
- * Gets the async state properties for connection
- * @param {object} asyncProp Async state property
- */
-export const getAsyncProperties = (asyncProp) => ({
-  payload: getPayload(asyncProp),
-  loading: isLoading(asyncProp),
-  done: isDone(asyncProp),
-  error: getError(asyncProp)
-})
-
 export const getGetterAsyncProps = (state, props) => {
   const { getter } = props
 
@@ -59,6 +61,22 @@ export const getGetterAsyncProps = (state, props) => {
   })
 
   return newAsyncProps
+}
+
+/**
+ * Basic action structure
+ * @param {string} type unique identifier for the store
+ * @return {funtion} action creator that returns an object with type and payload
+ */
+function Action (type) {
+  return (payload = null) => ({ type, payload })
+}
+
+export const createAction = type => {
+  const action = new Action(type)
+  action.toString = () => type
+  action.type = type
+  return action
 }
 
 /**
@@ -147,6 +165,16 @@ export const createAsyncReducerConfig = (asyncActions, asyncHandlers) => {
   }
 
   return config
+}
+
+const createReducer = (initialState, actionMap) => (state = initialState, action) => {
+  let newState = state
+
+  Object.keys(actionMap).forEach(actionKey => {
+    newState = actionMap[actionKey](state, action)
+  })
+
+  return newState
 }
 
 /**

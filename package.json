@@ -14,10 +14,6 @@
   "authors": [
     "Marcos Miani <marcos.miani@gmail.com>"
   ],
-  "dependencies": {
-    "lodash": "^4.17.11",
-    "redux-starter-kit": "^0.5.1"
-  },
   "devDependencies": {
     "@babel/core": "^7.4.4",
     "@babel/preset-env": "^7.4.4",
