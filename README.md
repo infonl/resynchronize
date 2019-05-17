@@ -30,10 +30,10 @@ Along with this shape there are functions to retrieve readable/understandable/co
 - `getError` if has errors, returns the error object
 - `getPayload` gets the payload, is not dependant of the previous methods, can be used anytime
 - `getAsyncProps` returns an object with all the properties set of the node:
-  - `payoad`
-  - `loading`
-  - `done`
-  - `error`
+-- `payoad`
+-- `loading`
+-- `done`
+-- `error`
 - `getGetterAsyncProps` serves as `map state to props` function using the `getter` prop on the component to get the async props
 
 ## How to set up Redux to use this beauties
