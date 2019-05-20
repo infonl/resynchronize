@@ -27,7 +27,7 @@
     "standard": "^12.0.1"
   },
   "scripts": {
-    "lint": "standard .",
+    "lint": "standard 'lib/**/*.js'",
     "test": "jest",
     "test:init": "jest --init",
     "test:watch": "npm test -- --watch",
