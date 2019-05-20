@@ -1,5 +1,5 @@
 const get = (asyncNode, property, defaultValue) => {
-  const result = asyncNode == null ? undefined : asyncNode[property]
+  const result = asyncNode === null ? undefined : asyncNode[property]
   return result === undefined ? defaultValue : result
 }
 
