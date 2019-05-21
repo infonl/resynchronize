@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Redux utils to manage async functions and promises",
   "license": "MIT",
-  "main": "index.js",
+  "main": "dist/bundle.js",
   "repository": "marcosm/resynchronize",
   "keywords": [
     "redux",
