@@ -17,16 +17,21 @@
   "devDependencies": {
     "@babel/core": "^7.4.4",
     "@babel/preset-env": "^7.4.4",
+    "@stryker-mutator/core": "^2.0.0",
+    "@stryker-mutator/html-reporter": "^2.0.0",
+    "@stryker-mutator/javascript-mutator": "^2.0.0",
+    "@stryker-mutator/jest-runner": "^2.0.0",
     "@types/jest": "^24.0.13",
     "babel-jest": "^24.8.0",
     "jest": "^24.8.0",
     "standard": "^12.0.1"
   },
   "scripts": {
-    "lint": "standard .",
+    "lint": "standard 'lib/**/*.js'",
     "test": "jest",
     "test:init": "jest --init",
     "test:watch": "npm test -- --watch",
-    "test:cov": "npm test -- --coverage"
+    "test:cov": "npm test -- --coverage",
+    "stryker": "stryker run"
   }
 }

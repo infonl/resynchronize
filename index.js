@@ -1,8 +1,8 @@
-import createAsyncActions from './createAsyncActions'
-import createAsyncReducer from './createAsyncReducer'
-import getAsyncProps from './getAsyncProps'
-import getGetterAsyncProps from './getGetterAsyncProps'
-import { isDone, isLoading, getError, getPayload } from './utils'
+import createAsyncActions from './lib/createAsyncActions'
+import createAsyncReducer from './lib/createAsyncReducer'
+import getAsyncProps from './lib/getAsyncProps'
+import getGetterAsyncProps from './lib/getGetterAsyncProps'
+import { isDone, isLoading, getError, getPayload } from './lib/utils'
 
 export {
   createAsyncActions,
