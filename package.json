@@ -1,0 +1,49 @@
+{
+  "name": "resynchronize",
+  "version": "1.0.0",
+  "description": "Redux utils to manage async functions and promises",
+  "license": "MIT",
+  "main": "dist/bundle.js",
+  "repository": "marcosm/resynchronize",
+  "keywords": [
+    "redux",
+    "async",
+    "actions",
+    "reducers"
+  ],
+  "authors": [
+    "Marcos Miani <marcos.miani@gmail.com>"
+  ],
+  "scripts": {
+    "clean": "rimraf dist/bundle.js",
+    "lint": "standard 'src/lib/**/*.js'",
+    "test": "jest --config jest.config.js",
+    "test:watch": "npm test -- --watch",
+    "test:cov": "npm test -- --coverage",
+    "check": "npm run lint && npm run test",
+    "build": "npm run check && rollup -c",
+    "stryker": "stryker run"
+  },
+  "husky": {
+    "hooks": {
+      "pre-push": "npm run check"
+    }
+  },
+  "devDependencies": {
+    "@babel/core": "^7.4.4",
+    "@babel/preset-env": "^7.4.4",
+    "@stryker-mutator/core": "^2.0.0",
+    "@stryker-mutator/html-reporter": "^2.0.0",
+    "@stryker-mutator/javascript-mutator": "^2.0.0",
+    "@stryker-mutator/jest-runner": "^2.0.0",
+    "@types/jest": "^24.0.13",
+    "babel-jest": "^24.8.0",
+    "husky": "^2.3.0",
+    "jest": "^24.8.0",
+    "rimraf": "^2.6.3",
+    "rollup": "^1.12.3",
+    "rollup-plugin-babel": "^4.3.2",
+    "rollup-plugin-node-resolve": "^5.0.0",
+    "standard": "^12.0.1"
+  }
+}

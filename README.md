@@ -1,23 +1,15 @@
 # RESYNCHRONIZE :WIP:
+![npm (scoped)](https://img.shields.io/azure-devops/coverage/swellaby/opensource/25.svg)
 
 Simple library/bunch of functionalities/*bunch of notes* on files to fetch/promise async payloads and put a meaninful state for your appplication
 
-This tries to follow the standards put on place by the creators of redux, but its still opinionated, feel free to add your own pretty features :wink:
-
-*It's in absolutly alpha*
+This tries to follow the standards put on place by the creators of redux, but its still opinionated, feel free to add your own pretty features!
 
 
 ## Requirements
-- `lodash` well who doesn't need a buch of extremely useful and handy functions to build another useful functions on top of it?
-- `redux-starter-kit` If you want it easy (*that's probably why you are here*) and offcial this is your library, includes:
-  - `redux-thunk` Your redux state need some way to dispatch actions from.. another dispatch :surprise:
-  - Some Inmutability control
-  - Functions to create actions and reducers
-  - Easy configurations for redux store
-  - Selectors *just in case*
-  - A set of default goodies that almost every setup uses
 - `redux` Where you store the magical/not-as-magical-as-you-though async nodes
-- `react-redux` It's required to use the functionalties with react :shrug:
+- `redux-thunk` Your redux state need some way to dispatch actions from.. another dispatch :surprise:
+- `react-redux` It's required to use the functionalties with react
 
 ## Further details
 
@@ -33,14 +25,14 @@ Every async node has the same shape:
 Along with this shape there are functions to retrieve readable/understandable/comparable properties, they use the state node as argument and return a boolean:
 
 - `isDone` if the request/promise is done
-- `hasError` if has errors, returns the error object
 - `isLoading` if is still pending
+- `getError` if has errors, returns the error object
 - `getPayload` gets the payload, is not dependant of the previous methods, can be used anytime
-- `getAsyncProperties` returns an object with all the properties set of the node:
-  - `payoad`
-  - `loading`
-  - `done`
-  - `error`
+- `getAsyncProps` returns an object with all the properties set of the node:
+-- `payoad`
+-- `loading`
+-- `done`
+-- `error`
 - `getGetterAsyncProps` serves as `map state to props` function using the `getter` prop on the component to get the async props
 
 ## How to set up Redux to use this beauties
@@ -92,7 +84,21 @@ const listReducer = createAsyncReducer(getListAction, {
 })
 ```
 
-In this case we enhance the `done` reducer filtering anything that is not valid on our list payload, but it is possible to enhance every other reducer using `start`, `reset` and `error`
+In this case we enhance the `done` reducer filtering anything that is not valid on our list payload, it is also possible to enhance every other reducer using `start`, `reset` and `error`
+
+If you want to reduce multiple asyncActions with the same reducer is simple as sending a key -> action object shaped as the first argument:
+
+```javascript
+const listReducer = createAsyncReducer(
+  {
+    getListAction,
+    refreshListAction
+  },
+  {
+    done: (state, { payload }) => payload.filter(item => !item.valid)
+  }
+)
+```
 
 *Aaaaaand that's it, there you have a simple set up for your async actions on place, but wait.. there is more*
 
@@ -106,7 +112,7 @@ import { getList } from '../my-actions'
 
 const connector = connect(
   state => ({
-    listItems: getAsyncProperties(state.myList)
+    listItems: getAsyncProps(state.myList)
   }),
   dispatch => ({
     dispatch,
@@ -140,7 +146,7 @@ const _myAwesomeComponent = ({
 const myAwesomeComponent = connector(_myAwesomeComponent)
 ```
 
-The method `getAsyncProperties` allows to get a meaninful set of properties that you can use to render the diferent async states on your component and the thunk created before allows you to dispatch the actions that start the async promise.
+The method `getAsyncProps` allows to get a meaninful set of properties that you can use to render the diferent async states on your component and the thunk created before allows you to dispatch the actions that start the async promise.
 
 ### When you dont like to repeat the same connector everywhere
 
