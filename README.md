@@ -3,9 +3,7 @@
 
 Simple library/bunch of functionalities/*bunch of notes* on files to fetch/promise async payloads and put a meaninful state for your appplication
 
-This tries to follow the standards put on place by the creators of redux, but its still opinionated, feel free to add your own pretty features :wink:
-
-*It's in absolutly alpha*
+This tries to follow the standards put on place by the creators of redux, but its still opinionated, feel free to add your own pretty features!
 
 
 ## Requirements
