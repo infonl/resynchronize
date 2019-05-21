@@ -1,16 +1,16 @@
-module.exports = function(config) {
+module.exports = function (config) {
   config.set({
-    mutate: ["lib/**/*.js", "!lib/**/*.test.js"],
-    mutator: "javascript",
-    testRunner: "jest",
+    mutate: ['lib/**/*.js', '!lib/**/*.test.js'],
+    mutator: 'javascript',
+    testRunner: 'jest',
     maxConcurrentTestRunners: 4,
-    reporters: ["html"],
+    reporters: ['html'],
     htmlReporter: {
-      baseDir: "stryker-reports"
+      baseDir: 'stryker-reports'
     },
-    coverageAnalysis: "off",
+    coverageAnalysis: 'off',
     jest: {
-      project: "custom"
+      project: 'custom'
     }
-  });
-};
+  })
+}
