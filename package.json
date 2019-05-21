@@ -4,7 +4,7 @@
   "description": "Redux utils to manage async functions and promises",
   "license": "MIT",
   "main": "dist/bundle.js",
-  "repository": "marcosm/resynchronize",
+  "repository": "infonl/resynchronize",
   "keywords": [
     "redux",
     "async",
