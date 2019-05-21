@@ -1,4 +1,4 @@
-# RESYNCHRONIZE :WIP:
+# RESYNCHRONIZE
 ![npm (scoped)](https://img.shields.io/azure-devops/coverage/swellaby/opensource/25.svg)
 
 Simple library/bunch of functionalities/*bunch of notes* on files to fetch/promise async payloads and put a meaninful state for your appplication
