@@ -34,7 +34,7 @@ const handleReset = reducer => (state, action) => ({
 })
 
 /** default reducer for async handling */
-export const defaultReducer = (state, { payload }) => payload || state || null
+export const defaultReducer = (state = null, { payload = null }) => payload || state
 
 /**
  * Basic action handler creator for async actions

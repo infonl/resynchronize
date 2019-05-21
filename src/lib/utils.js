@@ -24,7 +24,7 @@ const createAction = type => {
   return action
 }
 
-const createReducer = (initialState, actionMap) => (state = initialState, action) =>
+const createReducer = (initialState, actionMap) => (state = initialState, action = {}) =>
   typeof actionMap[action.type] === 'function'
     ? actionMap[action.type](state, action)
     : state
