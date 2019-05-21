@@ -18,15 +18,10 @@ const fuseProps = (own, connected) => {
   return newProp
 }
 
-const getAsyncKeys = getter => {
-  let asyncProps = ['asyncProp']
-
-  if (typeof getter === 'object') {
-    asyncProps = Object.keys(getter).map(key => key)
-  }
-
-  return asyncProps
-}
+const getAsyncKeys = getter =>
+  getter && typeof getter === 'object'
+    ? Object.keys(getter)
+    : ['asyncProp']
 
 const getGetterAsyncProps = (state, props) => {
   const { getter } = props
@@ -44,5 +39,6 @@ const getGetterAsyncProps = (state, props) => {
 }
 
 export {
+  getAsyncKeys,
   getGetterAsyncProps as default
 }

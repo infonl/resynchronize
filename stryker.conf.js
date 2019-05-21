@@ -1,6 +1,6 @@
 module.exports = function (config) {
   config.set({
-    mutate: ['lib/**/*.js', '!lib/**/*.test.js'],
+    mutate: ['src/lib/**/*.js', '!src/lib/**/*.test.js'],
     mutator: 'javascript',
     testRunner: 'jest',
     maxConcurrentTestRunners: 4,
