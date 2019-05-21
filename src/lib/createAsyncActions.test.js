@@ -11,6 +11,10 @@ describe('createAsyncActions', () => {
     expect(actions).toHaveProperty('RESET')
   })
 
+  test('stringified returns the type', () => {
+    expect(`${actions}`).toBe('TEST')
+  })
+
   test('properties stringified return the concatenation', () => {
     expect(`${actions.START}`).toBe('START_TEST')
     expect(`${actions.DONE}`).toBe('DONE_TEST')
