@@ -57,7 +57,7 @@ const createAsyncReducerConfig = (asyncActions, asyncHandlers) => {
   let config = {}
 
   // If isnt an AsyncActions all the keys of the object are put into the main reducer
-  if (AsyncActions.prototype.isPrototypeOf(asyncActions)) {
+  if (AsyncActions.prototype.isPrototypeOf(asyncActions)) { // eslint-disable-line 
     config = createActionsHandler(asyncActions, asyncHandlers)
   } else {
     // @TODO CONTROL THAT THEY ARE NORMAL OBJECTS

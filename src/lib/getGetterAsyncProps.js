@@ -26,7 +26,7 @@ const getAsyncKeys = getter =>
 const getGetterAsyncProps = (state, props) => {
   const { getter } = props
 
-  let newAsyncProps = {}
+  const newAsyncProps = {}
 
   getAsyncKeys(getter).forEach(key => {
     const newProp = getAsyncProps(
