@@ -224,8 +224,10 @@ var createAsyncReducerConfig = function createAsyncReducerConfig(asyncActions, a
   var config = {}; // If isnt an AsyncActions all the keys of the object are put into the main reducer
 
   if (AsyncActions.prototype.isPrototypeOf(asyncActions)) {
+    // eslint-disable-line 
     config = createActionsHandler(asyncActions, asyncHandlers);
   } else {
+    // @TODO CONTROL THAT THEY ARE NORMAL OBJECTS
     Object.keys(asyncActions).forEach(function (actionKey) {
       config = _objectSpread({}, config, createActionsHandler(asyncActions[actionKey], asyncHandlers));
     });
