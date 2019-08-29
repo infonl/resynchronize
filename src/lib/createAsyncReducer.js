@@ -60,6 +60,7 @@ const createAsyncReducerConfig = (asyncActions, asyncHandlers) => {
   if (AsyncActions.prototype.isPrototypeOf(asyncActions)) {
     config = createActionsHandler(asyncActions, asyncHandlers)
   } else {
+    // @TODO CONTROL THAT THEY ARE NORMAL OBJECTS
     Object.keys(asyncActions).forEach(actionKey => {
       config = {
         ...config,
