@@ -28,21 +28,26 @@ const getAsyncNodeReducer = (
 })
 
 /**
+ * Checks the config properties
+ * @param {*} config
+ */
+const checkProps = (config = {}) => {
+  const keys = Object.keys(config)
+  return !!keys.length && Object.keys(config).every(key => AVAILABLE_ACTIONS.includes(key) && typeof config[key] === 'function')
+}
+
+/**
  * Checks if the object has a shape that can be used to build the reducers
  * @param {*} config Property to be checked
  */
 const isValidConfig = config => {
-  let valid = false
-
-  if (!!config && typeof config === 'object') { // At least one of the properties is present AND is a function
-    const keys = Object.keys(config)
-    valid = !!keys.length && keys.every(key => AVAILABLE_ACTIONS.includes(key) && typeof config[key] === 'function')
-  }
+  // At least one of the properties is present AND is a function
+  const valid = config instanceof Object ? checkProps(config) : false
 
   if (!valid) { // all other types are not allowed
     throw new Error(`
       The config object for your handler must be an object with one of the async hooks properties:
-      ${AVAILABLE_ACTIONS.join(', ')}
+      ${AVAILABLE_ACTIONS.join()}
     `)
   }
   return valid
@@ -69,6 +74,7 @@ const handleError = (payloadReducer = nullifierReducer, errorReducer) =>
 const handleCancel = (payloadReducer = nullifierReducer, errorReducer) =>
   getAsyncNodeReducer(CANCELLED, payloadReducer, errorReducer)
 
+// @TODO to initial value??
 const handleReset = (payloadReducer = nullifierReducer, errorReducer = nullifierReducer) =>
   getAsyncNodeReducer(INITIAL, payloadReducer, errorReducer)
 
@@ -119,23 +125,9 @@ const formatHandler = (handler) => {
  * repeated ones
  * @param  {...any} args
  */
-const mergeHandlers = (...args) => {
-  const handlers = args.reduce(
-    (union, handler) => union.concat(Object.keys(handler)),
-    []
-  )
-
-  return handlers.reduce(
-    (current, next) => {
-      if (current.includes(next)) {
-        return current
-      } else {
-        current.push(next)
-        return current
-      }
-    },
-    []
-  )
+const mergeHandlers = (payload = {}, error = {}) => {
+  const handlers = new Set(Object.keys(payload).concat(Object.keys(error)))
+  return [...handlers]
 }
 
 /**

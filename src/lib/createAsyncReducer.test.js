@@ -12,6 +12,9 @@ describe('New api', () => {
   test('isValidConfig throws an error if the object format is incorrect', () => {
     expect(() => isValidConfig()).toThrowError()
     expect(() => isValidConfig(null)).toThrowError()
+    expect(() => isValidConfig(true)).toThrowError()
+    expect(() => isValidConfig(Boolean(true))).toThrowError()
+    expect(() => isValidConfig(new RegExp('a'))).toThrowError()
     expect(() => isValidConfig({ })).toThrowError()
     expect(() => isValidConfig({ done: null })).toThrowError()
     expect(() => isValidConfig({ done: null, start: () => {} })).toThrowError()
@@ -75,18 +78,59 @@ describe('New api', () => {
     expect(merged).toContain('TEST_THREE')
   })
 
-  describe('createActionsHandler created by default', () => {
-    const actions = getAsyncKeys('TEST')
-    const handlers = createActionsHandler(
-      actions
-    )
+  describe('createActionsHandler', () => {
+    describe('created by default', () => {
+      const actions = getAsyncKeys('TEST')
+      const handlers = createActionsHandler(
+        actions
+      )
 
-    test('has all the async actions on it', () => {
-      expect(handlers).toHaveProperty(actions.start)
-      expect(handlers).toHaveProperty(actions.progress)
-      expect(handlers).toHaveProperty(actions.done)
-      expect(handlers).toHaveProperty(actions.error)
-      expect(handlers).toHaveProperty(actions.reset)
+      test('has all the async actions on it', () => {
+        expect(handlers).toHaveProperty(actions.start)
+        expect(handlers).toHaveProperty(actions.progress)
+        expect(handlers).toHaveProperty(actions.done)
+        expect(handlers).toHaveProperty(actions.error)
+        expect(handlers).toHaveProperty(actions.reset)
+      })
+    })
+
+    describe('created with simple config', () => {
+      const actions = getAsyncKeys('TEST')
+      const handlers = createActionsHandler(
+        actions,
+        {
+          done: () => null
+        }
+      )
+
+      test('has all the async actions on it', () => {
+        expect(handlers).toHaveProperty(actions.start)
+        expect(handlers).toHaveProperty(actions.progress)
+        expect(handlers).toHaveProperty(actions.done)
+        expect(handlers).toHaveProperty(actions.error)
+        expect(handlers).toHaveProperty(actions.reset)
+      })
+    })
+
+    describe('created with complex config', () => {
+      const actions = getAsyncKeys('TEST')
+      const handlers = createActionsHandler(
+        actions,
+        {
+          done: () => null
+        },
+        {
+          done: () => null
+        }
+      )
+
+      test('has all the async actions on it', () => {
+        expect(handlers).toHaveProperty(actions.start)
+        expect(handlers).toHaveProperty(actions.progress)
+        expect(handlers).toHaveProperty(actions.done)
+        expect(handlers).toHaveProperty(actions.error)
+        expect(handlers).toHaveProperty(actions.reset)
+      })
     })
   })
 
