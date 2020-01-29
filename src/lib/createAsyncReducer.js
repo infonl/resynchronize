@@ -1,5 +1,5 @@
 import { AsyncActions, getAsyncKeys } from './createAsyncActions'
-import { createReducer, INTIAL, STARTED, DONE, ERROR } from './utils'
+import { createReducer, getStateShape, INITIAL, STARTED, DONE, ERROR } from './utils'
 
 /** default reducer for async handling */
 const defaultReducer = (state = null, { payload = null }) => payload || state
@@ -45,7 +45,7 @@ const handleError = (payloadReducer = nullifierReducer, errorReducer) =>
   getAsyncNodeReducer(ERROR, payloadReducer, errorReducer)
 
 const handleReset = (payloadReducer = nullifierReducer, errorReducer = nullifierReducer) =>
-  getAsyncNodeReducer(INTIAL, payloadReducer, errorReducer)
+  getAsyncNodeReducer(INITIAL, payloadReducer, errorReducer)
 
 /**
  * Basic action handler creator for async actions
@@ -110,8 +110,6 @@ const hookAsyncStates = (
   )
 }
 
-const ASYNC_INITIAL_STATE = { status: null, payload: null, error: null }
-
 /**
  * Create a reducer function to handle async actions
  * @param {*} intiialPayload Initial value of the payload, preferrably serializable
@@ -121,10 +119,7 @@ const ASYNC_INITIAL_STATE = { status: null, payload: null, error: null }
  */
 export const createAsyncReducer = (intiialPayload = null, asyncActions, asyncHandlers) =>
   createReducer(
-    {
-      ...ASYNC_INITIAL_STATE,
-      payload: intiialPayload
-    },
+    getStateShape(INITIAL, intiialPayload, null),
     createAsyncReducerConfig(asyncActions, asyncHandlers)
   )
 
@@ -138,7 +133,7 @@ const clearListError = createAction('CLEAR_LIST_ERROR')
 getList.done([])
 
 const newListReducer = createAsyncReducer(
-  [], // intial value
+  [], // INITIAL value
   { // MAIN PAYLOAD CONFIG
     // reducer for the async actions, can be filtered by status
     [getList]: (currentPayload, action) => {
@@ -171,7 +166,7 @@ const newListReducer = createAsyncReducer(
 // OR
 
 const classicListReducer = createAsyncReducer(
-  [], // intial value
+  [], // INITIAL value
   { // MAIN PAYLOAD CONFIG
     // reducer for the async actions, can be filtered by status
     [getList]: hookAsyncStates(

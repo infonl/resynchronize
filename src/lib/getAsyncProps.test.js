@@ -1,9 +1,10 @@
 /* global test, expect, describe */
-const getAsyncProps = require('./getAsyncProps')
+import getAsyncProps from './getAsyncProps'
+import { STARTED, getStateShape } from './utils'
 
 test('getAsyncProps returns an object with 4 basic properties', () => {
   const asyncNode = { status: null, payload: null, error: null }
-  const properties = getAsyncProps.default(asyncNode)
+  const properties = getAsyncProps(asyncNode)
   expect(properties).toHaveProperty('payload')
   expect(properties).toHaveProperty('loading')
   expect(properties).toHaveProperty('done')
@@ -13,7 +14,7 @@ test('getAsyncProps returns an object with 4 basic properties', () => {
 describe('getAsyncProps ', () => {
   describe('initial state', () => {
     const asyncNode = { status: null, payload: null, error: null }
-    const properties = getAsyncProps.default(asyncNode)
+    const properties = getAsyncProps(asyncNode)
 
     test('done is dalse', () => {
       expect(properties.done).toBeFalsy()
@@ -33,10 +34,10 @@ describe('getAsyncProps ', () => {
   })
 
   describe('started state', () => {
-    const asyncNode = { status: 'STARTED', payload: null, error: null }
-    const properties = getAsyncProps.default(asyncNode)
+    const asyncNode = getStateShape(STARTED)
+    const properties = getAsyncProps(asyncNode)
 
-    test('done is dalse', () => {
+    test('done is false', () => {
       expect(properties.done).toBeFalsy()
     })
 
@@ -55,7 +56,7 @@ describe('getAsyncProps ', () => {
 
   describe('done state', () => {
     const asyncNode = { status: 'DONE', payload: 'hello world!', error: null }
-    const properties = getAsyncProps.default(asyncNode)
+    const properties = getAsyncProps(asyncNode)
 
     test('done is true', () => {
       expect(properties.done).toBeTruthy()
@@ -76,10 +77,10 @@ describe('getAsyncProps ', () => {
 
   describe('error state', () => {
     const asyncNode = { status: 'ERROR', payload: 'hello world!', error: 'Some error!' }
-    const properties = getAsyncProps.default(asyncNode)
+    const properties = getAsyncProps(asyncNode)
 
-    test('done is false', () => {
-      expect(properties.done).toBeFalsy()
+    test('done is true', () => {
+      expect(properties.done).toBeTruthy()
     })
 
     test('loading is true', () => {

@@ -1,5 +1,5 @@
 /* global describe, test, expect */
-const getGetterAsyncProps = require('./getGetterAsyncProps')
+import getGetterAsyncProps, { getAsyncKeys } from './getGetterAsyncProps'
 
 describe('getAsyncKeys', () => {
   const asyncNode = { status: null, payload: null, error: null }
@@ -13,7 +13,7 @@ describe('getAsyncKeys', () => {
         asyncProp: (state) => state.asyncProp
       }
     }
-    const properties = getGetterAsyncProps.default(state, componentProps)
+    const properties = getGetterAsyncProps(state, componentProps)
     expect(properties).toHaveProperty('asyncProp')
     expect(properties.asyncProp).toHaveProperty('payload')
     expect(properties.asyncProp).toHaveProperty('loading')
@@ -28,7 +28,7 @@ describe('getAsyncKeys', () => {
       },
       asyncProp: 'something-else'
     }
-    const properties = getGetterAsyncProps.default(state, componentProps)
+    const properties = getGetterAsyncProps(state, componentProps)
     expect(properties).toHaveProperty('asyncProp')
     expect(properties.asyncProp).toHaveProperty('own')
     expect(properties.asyncProp).toHaveProperty('connected')
@@ -47,20 +47,20 @@ describe('getAsyncKeys', () => {
       asyncProp2: () => {}
     }
 
-    const keys = getGetterAsyncProps.getAsyncKeys(getter)
+    const keys = getAsyncKeys(getter)
     expect(keys).toEqual(['asyncProp1', 'asyncProp2'])
   })
   test('should return empty list of keys if getter object empty', () => {
-    const keys = getGetterAsyncProps.getAsyncKeys({})
+    const keys = getAsyncKeys({})
     expect(keys).toEqual([])
   })
   test('should return default list of keys if getter is null', () => {
-    const keys = getGetterAsyncProps.getAsyncKeys(null)
+    const keys = getAsyncKeys(null)
     expect(keys).toEqual(['asyncProp'])
   })
 
   test('should return default list of keys if getter is undefined', () => {
-    const keys = getGetterAsyncProps.getAsyncKeys()
+    const keys = getAsyncKeys()
     expect(keys).toEqual(['asyncProp'])
   })
 })
