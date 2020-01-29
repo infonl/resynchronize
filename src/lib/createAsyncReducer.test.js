@@ -1,10 +1,10 @@
 /* global test, expect */
-const createAsyncReducer = require('./createAsyncReducer')
-const createAsyncActions = require('./createAsyncActions')
+import { createAsyncReducerConfig } from './createAsyncReducer'
+import createAsyncActions from './createAsyncActions'
 
 test('createAsyncReducerConfig returns a collection of actions', () => {
-  const actions = createAsyncActions.default('TEST')
-  const reducerConfig = createAsyncReducer.createAsyncReducerConfig(actions)
+  const actions = createAsyncActions('TEST')
+  const reducerConfig = createAsyncReducerConfig(actions)
 
   expect(reducerConfig).toHaveProperty('START_TEST')
   expect(reducerConfig).toHaveProperty('DONE_TEST')
@@ -13,9 +13,9 @@ test('createAsyncReducerConfig returns a collection of actions', () => {
 })
 
 test('createAsyncReducerConfig returns a sumarized collection of actions', () => {
-  const actions = createAsyncActions.default('TEST')
-  const actions2 = createAsyncActions.default('TEST2')
-  const reducerConfig = createAsyncReducer.createAsyncReducerConfig({
+  const actions = createAsyncActions('TEST')
+  const actions2 = createAsyncActions('TEST2')
+  const reducerConfig = createAsyncReducerConfig({
     actions,
     actions2
   })

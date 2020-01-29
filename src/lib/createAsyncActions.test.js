@@ -1,8 +1,8 @@
 /* global test, expect, describe */
-const createAsyncActions = require('./createAsyncActions')
+import createAsyncActions from './createAsyncActions'
 
 describe('createAsyncActions', () => {
-  const actions = createAsyncActions.default('TEST')
+  const actions = createAsyncActions('TEST')
 
   test('returns an object with 3 actions', () => {
     expect(actions).toHaveProperty('start')

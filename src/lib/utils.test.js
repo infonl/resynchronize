@@ -1,8 +1,52 @@
 /* global test, expect, describe */
-const utils = require('./utils')
+import {
+  getStateShape,
+  INITIAL, STARTED, DONE, ERROR,
+  createAction,
+  createReducer,
+  isDone,
+  isLoading,
+  getPayload,
+  getError,
+  get
+} from './utils'
+
+describe('getStateShape', () => {
+  describe('when is initialized by default', () => {
+    const state = getStateShape()
+
+    test('contains three properties', () => {
+      expect(state).toHaveProperty('status')
+      expect(state).toHaveProperty('payload')
+      expect(state).toHaveProperty('error')
+    })
+
+    test('all properties are defaulted', () => {
+      expect(state.status).toBe(INITIAL)
+      expect(state.payload).toBe(null)
+      expect(state.error).toBe(null)
+    })
+  })
+
+  describe('when is initialized by with values', () => {
+    const state = getStateShape(STARTED, 'ok', 'error')
+
+    test('contains three properties', () => {
+      expect(state).toHaveProperty('status')
+      expect(state).toHaveProperty('payload')
+      expect(state).toHaveProperty('error')
+    })
+
+    test('all properties are defined with the arguments values', () => {
+      expect(state.status).toBe(STARTED)
+      expect(state.payload).toBe('ok')
+      expect(state.error).toBe('error')
+    })
+  })
+})
 
 describe('createAction', () => {
-  const action = utils.createAction('TEST')
+  const action = createAction('TEST')
 
   test('can be stringified to its type', () => {
     expect(`${action}`).toBe('TEST')
@@ -25,82 +69,82 @@ describe('createAction', () => {
 })
 
 describe('initial state', () => {
-  const asyncNode = { status: null, payload: null, error: null }
+  const asyncNode = getStateShape()
 
   test('isDone returns false', () => {
-    expect(utils.isDone(asyncNode)).toBeFalsy()
+    expect(isDone(asyncNode)).toBeFalsy()
   })
 
   test('isLoading returns false', () => {
-    expect(utils.isLoading(asyncNode)).toBeFalsy()
+    expect(isLoading(asyncNode)).toBeFalsy()
   })
 
   test('getPayload returns null', () => {
-    expect(utils.getPayload(asyncNode)).toBeFalsy()
+    expect(getPayload(asyncNode)).toBeFalsy()
   })
 
   test('getError returns false', () => {
-    expect(utils.getError(asyncNode)).toBeFalsy()
+    expect(getError(asyncNode)).toBeFalsy()
   })
 })
 
 describe('started state', () => {
-  const asyncNode = { status: 'STARTED', payload: null, error: null }
+  const asyncNode = getStateShape(STARTED)
 
   test('isDone returns false', () => {
-    expect(utils.isDone(asyncNode)).toBeFalsy()
+    expect(isDone(asyncNode)).toBeFalsy()
   })
 
   test('isLoading returns true', () => {
-    expect(utils.isLoading(asyncNode)).toBeTruthy()
+    expect(isLoading(asyncNode)).toBeTruthy()
   })
 
   test('getPayload returns null', () => {
-    expect(utils.getPayload(asyncNode)).toBeFalsy()
+    expect(getPayload(asyncNode)).toBeFalsy()
   })
 
   test('getError returns false', () => {
-    expect(utils.getError(asyncNode)).toBeFalsy()
+    expect(getError(asyncNode)).toBeFalsy()
   })
 })
 
 describe('done state', () => {
-  const asyncNode = { status: 'DONE', payload: 'hello world!', error: null }
+  const asyncNode = getStateShape(DONE, 'hello world!')
 
   test('isDone returns true', () => {
-    expect(utils.isDone(asyncNode)).toBeTruthy()
+    expect(isDone(asyncNode)).toBeTruthy()
   })
 
   test('isLoading returns false', () => {
-    expect(utils.isLoading(asyncNode)).toBeFalsy()
+    expect(isLoading(asyncNode)).toBeFalsy()
   })
 
   test('getPayload returns the payload', () => {
-    expect(utils.getPayload(asyncNode)).toBe(asyncNode.payload)
+    expect(getPayload(asyncNode)).toBe(asyncNode.payload)
   })
 
   test('getError returns false', () => {
-    expect(utils.getError(asyncNode)).toBeFalsy()
+    expect(getError(asyncNode)).toBeFalsy()
   })
 })
 
 describe('error state', () => {
-  const asyncNode = { status: 'ERROR', payload: 'hello world!', error: 'Some error!' }
+  const asyncNode = getStateShape(ERROR, 'hello world!', 'Some error!')
 
   test('isDone returns false', () => {
-    expect(utils.isDone(asyncNode)).toBeFalsy()
+    expect(isDone(asyncNode)).toBeTruthy()
   })
 
   test('isLoading returns true', () => {
-    expect(utils.isLoading(asyncNode)).toBeFalsy()
+    expect(isLoading(asyncNode)).toBeFalsy()
   })
 
   test('getPayload returns the payload', () => {
-    expect(utils.getPayload(asyncNode)).toBe(asyncNode.payload)
+    expect(getPayload(asyncNode)).toBe(asyncNode.payload)
   })
 
   test('error returns the error', () => {
-    expect(utils.getError(asyncNode)).toBe(asyncNode.error)
+    expect(getError(asyncNode)).toBe(asyncNode.error)
   })
 })
 
@@ -108,23 +152,23 @@ describe('get', () => {
   const obj = { prop: 'value' }
 
   test('shoud return the value of existing property', () => {
-    expect(utils.get(obj, 'prop')).toBe('value')
-    expect(utils.get(obj, 'prop', 'default')).toBe('value')
+    expect(get(obj, 'prop')).toBe('value')
+    expect(get(obj, 'prop', 'default')).toBe('value')
   })
 
   test('should return default value if property does not exist', () => {
-    expect(utils.get(obj, 'fakeProp', 'default')).toBe('default')
+    expect(get(obj, 'fakeProp', 'default')).toBe('default')
   })
 
   test('shoud return "undefined" if property does not exist and no default value specified', () => {
-    expect(utils.get(obj, 'fakeProp')).toBeUndefined()
-    expect(utils.get(null, 'fakeProp')).toBeUndefined()
-    expect(utils.get(undefined, 'fakeProp')).toBeUndefined()
+    expect(get(obj, 'fakeProp')).toBeUndefined()
+    expect(get(null, 'fakeProp')).toBeUndefined()
+    expect(get(undefined, 'fakeProp')).toBeUndefined()
   })
 
   test('should return default value if target object is null or undefined', () => {
-    expect(utils.get(null, 'prop', 'default')).toBe('default')
-    expect(utils.get(undefined, 'prop', 'default')).toBe('default')
+    expect(get(null, 'prop', 'default')).toBe('default')
+    expect(get(undefined, 'prop', 'default')).toBe('default')
   })
 })
 
@@ -134,34 +178,34 @@ describe('createReducer', () => {
   test('shoud return "initialState" if current state is "undefined" and no action match in "actionMap"', () => {
     const actionMap = {}
     const action = { type: 'DONE_TEST', payload: 'test-payload' }
-    const reducer = utils.createReducer(initialState, actionMap)
+    const reducer = createReducer(initialState, actionMap)
     expect(reducer(undefined, action)).toBe(initialState)
   })
 
   test('should return last state if no action match in "actionMap"', () => {
     const actionMap = {}
     const action = { type: 'DONE_TEST', payload: 'test-payload' }
-    const reducer = utils.createReducer(initialState, actionMap)
+    const reducer = createReducer(initialState, actionMap)
     expect(reducer('current-state', action)).toBe('current-state')
   })
 
   test('should return a new state if there is a match for action in "actionMap"', () => {
     const actionMap = { DONE_TEST: (state, { payload }) => state + payload }
     const action = { type: 'DONE_TEST', payload: '-modified' }
-    const reducer = utils.createReducer(initialState, actionMap)
+    const reducer = createReducer(initialState, actionMap)
     expect(reducer('current-state', action)).toBe('current-state-modified')
   })
 
   test('should return a new state if there is a match for multiple actions in "actionMap"', () => {
-    const actionStart = utils.createAction('START_TEST')
-    const actionDone = utils.createAction('DONE_TEST')
+    const actionStart = createAction('START_TEST')
+    const actionDone = createAction('DONE_TEST')
 
     const actionMap = {
       [actionStart]: (state, { payload }) => `${state}-started${payload || ''}`,
       [actionDone]: (state, { payload }) => `${state}-done${payload || ''}`
     }
 
-    const reducer = utils.createReducer(initialState, actionMap)
+    const reducer = createReducer(initialState, actionMap)
     const startState = reducer('current-state', actionStart('-asdasd'))
     const doneState = reducer(startState, actionDone('-qwerty'))
 
