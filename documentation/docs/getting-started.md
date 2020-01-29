@@ -1,5 +1,5 @@
 ---
-id: doc1
+id: getting-started
 title: Getting started
 sidebar_label: Getting started
 ---
@@ -129,5 +129,5 @@ const payload = getPayload(state.list)
 ---
 ## Connect?
 Now, we need to use this to render something right? check the examples
-- [Redux + React example](doc2.md)
+- [Redux + React example](redux-react-example.md)
 
