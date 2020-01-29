@@ -8,7 +8,7 @@ describe('Integration tests', () => {
 
   test('should be able to handle START action', () => {
     expect(reducer(undefined, actions.start())).toEqual({
-      status: 'START',
+      status: 'STARTED',
       error: null,
       payload: null
     })
@@ -44,7 +44,7 @@ describe('Integration tests', () => {
     expect(reducer(state, actions.reset())).toEqual({
       status: null,
       error: null,
-      payload: 'test-payload'
+      payload: null
     })
   })
 

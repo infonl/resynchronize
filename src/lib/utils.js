@@ -1,11 +1,16 @@
+const INTIAL = null
+const STARTED = 'STARTED'
+const DONE = 'DONE'
+const ERROR = 'ERROR'
+
 const get = (object, property, defaultValue) => object
   ? object[property] || defaultValue
   : defaultValue
 
 // Basic set of functions to manage the state of async actions and reducers
-const isDone = asyncStatus => get(asyncStatus, 'status') === 'DONE'
-const getError = asyncStatus => get(asyncStatus, 'status') === 'ERROR' && get(asyncStatus, 'error', null)
-const isLoading = asyncStatus => get(asyncStatus, 'status') === 'START'
+const isDone = asyncStatus => get(asyncStatus, 'status') === DONE
+const getError = asyncStatus => get(asyncStatus, 'status') === ERROR && get(asyncStatus, 'error', null)
+const isLoading = asyncStatus => get(asyncStatus, 'status') === STARTED
 const getPayload = asyncStatus => get(asyncStatus, 'payload', null)
 
 /**
@@ -30,6 +35,10 @@ const createReducer = (initialState, actionMap) => (state = initialState, action
     : state
 
 export {
+  INTIAL,
+  STARTED,
+  DONE,
+  ERROR,
   get,
   createAction,
   createReducer,
