@@ -3,6 +3,7 @@ import { createAction } from './utils'
 function getAsyncKeys (storeKey) {
   return {
     start: `START_${storeKey}`,
+    flush: `FLUSH_${storeKey}`,
     done: `DONE_${storeKey}`,
     error: `ERROR_${storeKey}`,
     reset: `RESET_${storeKey}`
@@ -14,8 +15,9 @@ function getAsyncKeys (storeKey) {
  * @param {string} storeKey unique identifier for the store
  */
 function AsyncActions (storeKey) {
-  const { start, done, error, reset } = getAsyncKeys(storeKey)
+  const { start, flush, done, error, reset } = getAsyncKeys(storeKey)
   this.start = createAction(start)
+  this.flush = createAction(flush)
   this.done = createAction(done)
   this.error = createAction(error)
   this.reset = createAction(reset)
