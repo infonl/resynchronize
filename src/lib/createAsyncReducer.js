@@ -6,8 +6,6 @@ const defaultReducer = (state = null, { payload = null }) => payload || state
 
 const nullifierReducer = () => null
 
-const cancelledReducer = () => 'cancelled'
-
 /**
  * Async node reducer builder
  * @param {String*} status Desired status on the final node
@@ -65,7 +63,7 @@ const handleDone = (payloadReducer, errorReducer = nullifierReducer) =>
 const handleError = (payloadReducer = nullifierReducer, errorReducer) =>
   getAsyncNodeReducer(ERROR, payloadReducer, errorReducer)
 
-const handleCancel = (payloadReducer = nullifierReducer, errorReducer = cancelledReducer) =>
+const handleCancel = (payloadReducer = nullifierReducer, errorReducer) =>
   getAsyncNodeReducer(CANCELLED, payloadReducer, errorReducer)
 
 const handleReset = (payloadReducer = nullifierReducer, errorReducer = nullifierReducer) =>
@@ -193,14 +191,14 @@ const createAsyncReducerConfig = (payloadHandlers = {}, errorHandlers = {}) => {
 
 /**
  * Create a reducer function to handle async actions
- * @param {*} intiialPayload Initial value of the payload, preferrably serializable
+ * @param {*} initialPayload Initial value of the payload, preferrably serializable
  * @param {*} asyncActions Set of actions that include every state of a fetch process
  * @param {*} asyncHandlers Set of action reducers
  * @returns {function} async reducer
  */
-const _createAsyncReducer = (intiialPayload = null, asyncActions, payloadHandlers, errorHandlers) =>
+const _createAsyncReducer = (initialPayload = null, asyncActions, payloadHandlers, errorHandlers) =>
   createReducer(
-    getStateShape(INITIAL, intiialPayload, null),
+    getStateShape(INITIAL, initialPayload, null),
     _createAsyncReducerConfig(asyncActions, payloadHandlers, errorHandlers)
   )
 
@@ -210,9 +208,9 @@ const _createAsyncReducer = (intiialPayload = null, asyncActions, payloadHandler
  * @param {Function} payloadReducer Function used to reduce the payload on the different states
  * @param {Function} errorReducerConfig Function used to reduce the error on the different states
  */
-const createAsyncReducer = (intiialPayload = null, payloadHandlers, errorHandlers) =>
+const createAsyncReducer = (initialPayload = null, payloadHandlers, errorHandlers) =>
   createReducer(
-    getStateShape(INITIAL, intiialPayload, null),
+    getStateShape(INITIAL, initialPayload, null),
     createAsyncReducerConfig(payloadHandlers, errorHandlers)
   )
 

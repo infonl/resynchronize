@@ -9,13 +9,11 @@ const get = (object, property, defaultValue) => object
   : defaultValue
 
 // Basic set of functions to manage the state of async actions and reducers
-const isDone = asyncStatus => get(asyncStatus, 'status') === DONE || get(asyncStatus, 'status') === ERROR
-const getError = asyncStatus => {
-  const status = get(asyncStatus, 'status')
-  return (status === ERROR || status === CANCELLED) && get(asyncStatus, 'error', null)
-}
 const isLoading = asyncStatus => get(asyncStatus, 'status') === STARTED
+const isDone = asyncStatus => get(asyncStatus, 'status') === DONE
+const hasError = asyncStatus => get(asyncStatus, 'status') === ERROR
 const isCancelled = asyncStatus => get(asyncStatus, 'status') === CANCELLED
+const getError = asyncStatus => get(asyncStatus, 'error', null)
 const getPayload = asyncStatus => get(asyncStatus, 'payload', null)
 
 const getStateShape = (status = INITIAL, payload = null, error = null) => ({
@@ -38,10 +36,11 @@ const createAction = type => {
   return action
 }
 
-const createReducer = (initialState, actionMap) => (state = initialState, action = {}) =>
-  typeof actionMap[action.type] === 'function'
-    ? actionMap[action.type](state, action)
-    : state
+const createReducer = (initialState, actionMap) =>
+  (state = initialState, action = {}) =>
+    typeof actionMap[action.type] === 'function'
+      ? actionMap[action.type](state, action)
+      : state
 
 export {
   INITIAL,
@@ -54,6 +53,7 @@ export {
   createAction,
   createReducer,
   isDone,
+  hasError,
   getError,
   isCancelled,
   isLoading,
