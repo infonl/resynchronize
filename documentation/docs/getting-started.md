@@ -21,7 +21,7 @@ const getList = createAsyncActions('GEL_LIST')
 ## Dispatch the actions on the right moment
 Use your created actions to set the right status on the right moment of your requests
 ### Basic example
-```javascript
+```javascript {6,9,12}
 // my-actions.js
 // Could be redux, or could be something else as far as you can get the state from it
 import store from './my-store.js'
@@ -40,7 +40,7 @@ const myGetList = (dispatch) => {
 ```
 ### Other example
 Anything that you have to wait for it can be expressed with the async actions
-```javascript
+```javascript {6,8}
 // my-actions.js
 // Could be redux, or could be something else as far as you can get the state from it
 import store from './my-store.js'
