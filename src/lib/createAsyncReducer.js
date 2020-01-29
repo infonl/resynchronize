@@ -41,10 +41,10 @@ const defaultReducer = (state = null, { payload = null }) => payload || state
  * @param {object} actions Async actions
  */
 const createActionsHandler = (actions, { start, done, reset, error } = {}) => ({
-  [actions.START]: handleStart(start || defaultReducer),
-  [actions.DONE]: handleDone(done || defaultReducer),
-  [actions.ERROR]: handleError(error || defaultReducer),
-  [actions.RESET]: handleReset(reset || defaultReducer)
+  [actions.start]: handleStart(start || defaultReducer),
+  [actions.done]: handleDone(done || defaultReducer),
+  [actions.error]: handleError(error || defaultReducer),
+  [actions.reset]: handleReset(reset || defaultReducer)
 })
 
 /**
@@ -57,7 +57,7 @@ const createAsyncReducerConfig = (asyncActions, asyncHandlers) => {
   let config = {}
 
   // If isnt an AsyncActions all the keys of the object are put into the main reducer
-  if (AsyncActions.prototype.isPrototypeOf(asyncActions)) { // eslint-disable-line 
+  if (AsyncActions.prototype.isPrototypeOf(asyncActions)) { // eslint-disable-line
     config = createActionsHandler(asyncActions, asyncHandlers)
   } else {
     // @TODO CONTROL THAT THEY ARE NORMAL OBJECTS

@@ -5,10 +5,10 @@ import { createAction } from './utils'
  * @param {string} storeKey unique identifier for the store
  */
 function AsyncActions (storeKey) {
-  this.START = createAction(`START_${storeKey}`)
-  this.DONE = createAction(`DONE_${storeKey}`)
-  this.ERROR = createAction(`ERROR_${storeKey}`)
-  this.RESET = createAction(`RESET_${storeKey}`)
+  this.start = createAction(`START_${storeKey}`)
+  this.done = createAction(`DONE_${storeKey}`)
+  this.error = createAction(`ERROR_${storeKey}`)
+  this.reset = createAction(`RESET_${storeKey}`)
   this.toString = () => storeKey
 }
 
