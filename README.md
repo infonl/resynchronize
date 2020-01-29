@@ -5,220 +5,128 @@ Simple library/bunch of functionalities/*bunch of notes* on files to fetch/promi
 
 This tries to follow the standards put on place by the creators of redux, but it's still opinionated, feel free to add your own pretty features!
 
-
-## Requirements
-- `Store/State` Where you store the magical/not-as-magical-as-you-though async nodes, `redux` and `react hooks` have been tested
-- `A-Thunk-type-dispatch` Your store need some way to dispatch actions from another dispatch, normally achieved by a middleware
-
-## Step by step
-
-The flow is as usual, create actions, set up reducers, dispatch said actions, but with a twist.
-
-### Step I - create actions
-To create 'async actions' we use `createAsyncActions`: this creates a set of 4 actions to follow the natural state of any asynchronous action: `START`, `DONE`, `ERROR` and `RESET`
-
-```javascript
-const getListAction = createAsyncActions('GET_LIST')
+## Install
+Copy and run this in your project folder
+```shell
+npm i --save resynchronize
 ```
-
-This `getListAction` object has four properties, each one an action that can be dispatched
-
-### Step II - dispatch actions on the right moment
-With this action object (the actions are inside as properties) and a simple `thunk` we set up a method that uses this actions on the right moment, example:
-
+## Create actions
+Create your async actions, the returned object will contain different actions inside that can be used to set the steps of your async functions.
 ```javascript
-const getListAction = createAsyncActions('GET_LIST')
+// my-actions.js
+import { createAsyncActions } from 'resynchronize'
+const getList = createAsyncActions('GEL_LIST')
+```
+## Dispatch the actions on the right moment
+Use your created actions to set the right status on the right moment of your requests
+### Basic example
+```javascript {6,9,12}
+// my-actions.js
+// Could be redux, or could be something else as far as you can get the state from it
+import store from './my-store.js'
 
-// This is your function that dispatches another actions
-const getList = dispatch =>
-  // Started! it will take a moment, promise!
-  dispatch(getListAction.START())
+const myGetList = (dispatch) => {
+  dispatch(getList.start()) // Loading starts
+  fetch('/api/list')
+    .then(data => {
+      dispatch(getList.done(data)) // The async action is done
+    })
+    .catch(ex => {
+      dispatch(getList.error(ex)) // The async action failed
+    })
 
-  fetch('http://random.api.com/list')
-    .then(response => dispatch(getListAction.DONE(response))) // Done! there you have your stuff!
-    .catch(exception => dispatch(getListAction.ERROR(exception))) // Error!
-
-const resetList = dispatch => {
-  dispatch(getListAction.RESET())
 }
 ```
+### Other example
+Anything that you have to wait for it can be expressed with the async actions
+```javascript {6,8}
+// my-actions.js
+// Could be redux, or could be something else as far as you can get the state from it
+import store from './my-store.js'
 
-In this example we use a common `fetch` and we tackle the different states of it with our async actions, meaning that if we dispatch the `getList` method every action will be triggered when is expected, setting the async node acordingly.
-
-This example can be used to create different sets of thunks that add controls or are more reusable in your app.
-
-### Step III - reduce actions
-With the async action object and the method `createAsyncReducer` we create the reducer for this actions, by default anything that comes as a result of the `DONE` action will be used as payload and any `ERROR` will fill the `error` property
-
-```javascript
-const listReducer = createAsyncReducer(getListAction)
+const myGetList = (dispatch) => {
+  dispatch(getList.start()) // Loading starts
+  setTimeOut(() => {
+    dispatch(getList.done('the wait is over!')) // The async action is done
+  }, 1000)
+}
 ```
-
-The `createAsyncReducer` returns a simple reducer function that receives two arguments `state` and `action`
-
-The `createAsyncReducer` also receives a second argument, you can pass an object to further decide what to do with your payload when you receive it, example:
-
+---
+## Create reducers
+All this actions will trigger state changes thru a reducer, you can always use the action object to tackle the different moments yourself, but to simplify it even more you can use the creator function.
 ```javascript
-const listReducer = createAsyncReducer(getListAction, {
-  done: (state, { payload }) => payload.filter(item => !item.valid)
-})
+// my-reducers.js
+import { createAsyncReducer } from 'resynchronize'
+import { getList } from './my-actions.js'
+
+// Simple implementation
+const getListReducer = createAsyncReducer(
+  [],
+  getList
+)
 ```
-
-In this case we enhance the `done` reducer filtering anything that is not valid on our list payload, it is also possible to enhance every other reducer using `start`, `reset` and `error`
-
-If you want to reduce multiple asyncActions with the same reducer is simple as sending a key -> action object shaped as the first argument:
-
+Combinable with other actions
 ```javascript
-const listReducer = createAsyncReducer(
+const getListReducer = createAsyncReducer(
+  [],
+  { getList }
+)
+```
+Custom reducers for the different parts, we will go there eventually dont worry
+```javascript
+const getListReducer = createAsyncReducer(
+  [],
   {
-    getListAction,
-    refreshListAction
-  },
-  {
-    done: (state, { payload }) => payload.filter(item => !item.valid)
+    [getList]: {
+      done: (currentPayload, action) => action.payload || currrentPayload
+    }
   }
 )
 ```
 
-*Aaaaaand that's it, there you have a simple set up for your async actions on place, but wait.. there is more*
-
-## Step IV - use the state
-In order to detect if your async function is `loading`, `done` or has some `error`, you can access the state directly and check the status and payload on the node, but since this is cumbersome you can use `getAsyncProps`. This method returns this properties as booleans:
-
+## Get payload and check status
+With the actions being reduced, the next step is using this async state on your code. You can always use it raw, the shape of the state will be consistent if you use the creators, but again to simplify our logic and controls you can use the getters and be completely sure that no matter what internal changes could happen on the internals, it will be reliable.
+### Quick checks
+Simple and quick way to obtain the async state, it will contain the status object with all the status on boolean shape, the payload (as you set it on your dispatchs) and the error (same as payload)
 ```javascript
-const SubmitButton = () => {
-
-const asyncStatus = getAsyncProps(state.yourAsyncNode)
-  return (
-    asyncStatus.loading 
-    ? <span>Loading..</span>
-    : <button>Submit</button>
-  )
-}
-
-```
-
-## How to set up this in my React components
-Assuming that you already put on place `react-redux` the connection with this async nodes is simple as:
-
-### THE example (with redux)
-```javascript
-import { connect } from 'react-redux'
+// my-reducers.js
 import { getAsyncProps } from 'resynchronize'
-import { getList } from '../my-actions'
+// Could be redux, or could be something else as far as you can get the state from it
+import store from './my-store.js'
 
-const connector = connect(
-  state => ({
-    listItems: getAsyncProps(state.myList)
-  }),
-  dispatch => ({
-    dispatch,
-    getMyList: () => dispatch(getList)
-  })
-)
-
-const _myAwesomeComponent = ({
-  listItems: { done, loading, payload },
-  getMyList
-}) => (
-  <div>
-    <button onClick={getMyList} disabled={loading}>
-      Get items!
-    </button>
-    <ul>
-      {loading && (
-        <span>
-          Loading items...
-        </span>
-      )}
-      {done && payload.map(item => (
-        <li>
-          {item.name}
-        </li>
-      ))}
-    </ul>
-  </div>
-)
-
-const myAwesomeComponent = connector(_myAwesomeComponent)
-```
-
-The method `getAsyncProps` allows to get a meaningful set of properties that you can use to render the different async states on your component and the thunk created before allows you to dispatch the actions that start the async promise.
-
-### When you dont like to repeat the same connector everywhere
-
-As an extra sweet cherry on top you can the `getGetterAsyncProps`. This method allows you to connect any async node from state just putting a `getter` prop in the connected component. Using the previous example:
-
-```javascript
-import { connect } from 'react-redux'
-import { getGetterAsyncProps } from 'resynchronize'
-import { getList } from '../my-actions'
-
-const connector = connect(
-  getGetterAsyncProps,
-  dispatch => ({
-    dispatch,
-    getMyList: () => dispatch(getList)
-  })
-)
-
-const _MyAwesomeComponent = ({
-  listItems: { done, loading, payload },
-  getMyList
-}) => (
-  <div>
-    <button onClick={getMyList} disabled={loading}>
-      Get items!
-    </button>
-    <ul>
-      {loading && (
-        <span>
-          Loading items...
-        </span>
-      )}
-      {done && payload.map(item => (
-        <li>
-          {item.name}
-        </li>
-      ))}
-    </ul>
-  </div>
-)
-
-const MyAwesomeComponent = connector(_MyAwesomeComponent)
-```
-
-And when you use it
-
-```javascript
-import MyAwesomeComponent from '../MyAwesomeComponent'
-
-const myApp = () => (
-  <MyAwesomeComponent getter={state => ({ listItems: myList })} />
-)
-```
-
-## State API details
-
-### STATE: Every async node has the same shape:
-```javascript
-{
-  status: 'START',
-  payload: null,
+const state = store.getState()
+const list = getAsyncProps(state.list)
+/*
+list = {
+  status: {
+    done: false,
+    loading: false,
+    cancelled: false,
+    error: false
+  },
+  payload: [],
   error: null
 }
+*/
 ```
+### Individual checks
+In case you don't need all the object, just basic checks, you can use the individual getters.
+```javascript
+// my-reducers.js
+import { isDone, isLoading, isCancelled, hasError, getError, getPayload } from 'resynchronize'
+// Could be redux, or could be something else as far as you can get the state from it
+import store from './my-store.js'
 
-### METHODS: Along with this shape there are functions to retrieve readable/understandable/comparable properties, they use the state node as argument and return a boolean:
-
-- `isDone` if the request/promise is done
-- `isLoading` if is still pending
-- `getError` if has errors, returns the error object
-- `getPayload` gets the payload, is not dependant of the previous methods, can be used anytime
-- `getAsyncProps` returns an object with all the properties set of the node:
--- `payoad`
--- `loading`
--- `done`
--- `error`
-- `getGetterAsyncProps` serves as `map state to props` function using the `getter` prop on the component to get the async props
+const state = store.getState()
+const done = isDone(state.list)
+const loading = isLoading(state.list)
+const cancelled = isCancelled(state.list)
+const someError = hasError(state.list)
+const theErrorObject = getError(state.list)
+const payload = getPayload(state.list)
+```
+---
+## Connect?
+Now, we need to use this to render something right? check the examples
+- [Redux + React example](redux-react-example.md)
 

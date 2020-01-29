@@ -1,14 +1,25 @@
+import { AVAILABLE_ACTIONS } from './consts'
 import { createAction } from './utils'
+
+function getAsyncKeys (storeKey) {
+  return AVAILABLE_ACTIONS.reduce(
+    (keys, key) => {
+      keys[key] = `${key.toUpperCase()}_${storeKey}`
+      return keys
+    },
+    {}
+  )
+}
 
 /**
  * Basic async actions structure
  * @param {string} storeKey unique identifier for the store
  */
 function AsyncActions (storeKey) {
-  this.START = createAction(`START_${storeKey}`)
-  this.DONE = createAction(`DONE_${storeKey}`)
-  this.ERROR = createAction(`ERROR_${storeKey}`)
-  this.RESET = createAction(`RESET_${storeKey}`)
+  const asyncKeys = getAsyncKeys(storeKey)
+
+  AVAILABLE_ACTIONS.forEach(key => { this[key] = createAction(asyncKeys[key]) })
+
   this.toString = () => storeKey
 }
 
@@ -18,7 +29,18 @@ function AsyncActions (storeKey) {
  */
 const createAsyncActions = storeKey => new AsyncActions(storeKey)
 
+/**
+ * Checks if the given object is an instance of async actions
+ * @param {*} action Object to be checked
+ * @returns {Boolean}
+ */
+const isAsyncActions = action =>
+  AsyncActions.prototype.isPrototypeOf(action) // eslint-disable-line
+
 export {
+  AVAILABLE_ACTIONS,
+  getAsyncKeys,
+  isAsyncActions,
   createAsyncActions as default,
   AsyncActions
 }

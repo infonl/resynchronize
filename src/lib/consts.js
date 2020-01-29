@@ -1,0 +1,30 @@
+const INITIAL = null
+const STARTED = 'STARTED'
+const DONE = 'DONE'
+const ERROR = 'ERROR'
+const CANCELLED = 'CANCELLED'
+
+const START_ACTION = 'start'
+const PROGRESS_ACTION = 'progress'
+const DONE_ACTION = 'done'
+const ERROR_ACTION = 'error'
+const CANCEL_ACTION = 'cancel'
+const RESET_ACTION = 'reset'
+
+const AVAILABLE_ACTIONS = [
+  START_ACTION,
+  PROGRESS_ACTION,
+  DONE_ACTION,
+  ERROR_ACTION,
+  CANCEL_ACTION,
+  RESET_ACTION
+]
+
+export {
+  AVAILABLE_ACTIONS,
+  INITIAL,
+  STARTED,
+  DONE,
+  ERROR,
+  CANCELLED
+}
