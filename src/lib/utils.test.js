@@ -45,7 +45,7 @@ describe('initial state', () => {
 })
 
 describe('started state', () => {
-  const asyncNode = { status: 'START', payload: null, error: null }
+  const asyncNode = { status: 'STARTED', payload: null, error: null }
 
   test('isDone returns false', () => {
     expect(utils.isDone(asyncNode)).toBeFalsy()

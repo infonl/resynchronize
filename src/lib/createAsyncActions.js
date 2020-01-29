@@ -1,14 +1,24 @@
 import { createAction } from './utils'
 
+function getAsyncKeys (storeKey) {
+  return {
+    start: `START_${storeKey}`,
+    done: `DONE_${storeKey}`,
+    error: `ERROR_${storeKey}`,
+    reset: `RESET_${storeKey}`
+  }
+}
+
 /**
  * Basic async actions structure
  * @param {string} storeKey unique identifier for the store
  */
 function AsyncActions (storeKey) {
-  this.start = createAction(`START_${storeKey}`)
-  this.done = createAction(`DONE_${storeKey}`)
-  this.error = createAction(`ERROR_${storeKey}`)
-  this.reset = createAction(`RESET_${storeKey}`)
+  const { start, done, error, reset } = getAsyncKeys(storeKey)
+  this.start = createAction(start)
+  this.done = createAction(done)
+  this.error = createAction(error)
+  this.reset = createAction(reset)
   this.toString = () => storeKey
 }
 
@@ -19,6 +29,7 @@ function AsyncActions (storeKey) {
 const createAsyncActions = storeKey => new AsyncActions(storeKey)
 
 export {
+  getAsyncKeys,
   createAsyncActions as default,
   AsyncActions
 }

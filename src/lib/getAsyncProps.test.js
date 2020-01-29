@@ -33,7 +33,7 @@ describe('getAsyncProps ', () => {
   })
 
   describe('started state', () => {
-    const asyncNode = { status: 'START', payload: null, error: null }
+    const asyncNode = { status: 'STARTED', payload: null, error: null }
     const properties = getAsyncProps.default(asyncNode)
 
     test('done is dalse', () => {
