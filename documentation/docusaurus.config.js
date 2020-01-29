@@ -29,8 +29,8 @@ module.exports = {
           title: 'Docs',
           items: [
             {
-              label: 'Style Guide',
-              to: 'docs/gettingstarted'
+              label: 'Getting started',
+              to: 'docs/getting-started'
             }
           ]
         },
@@ -44,7 +44,7 @@ module.exports = {
           ]
         }
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`
+      copyright: `Copyright © ${new Date().getFullYear()} Resynchronize, Inc. Built with Docusaurus.`
     }
   },
   presets: [

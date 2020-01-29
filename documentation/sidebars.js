@@ -9,8 +9,7 @@ module.exports = {
   someSidebar: {
     Introduction: ['getting-started'],
     Examples: ['redux-react-example', 'react-hooks-example'],
-    Advanced: ['custom-reducers'],
-    API: ['create-actions', 'create-reducers'],
-    Features: ['mdx']
+    API: ['create-actions', 'create-reducers', 'get-async-props', 'getters'],
+    Advanced: ['custom-reducers']
   }
 }
