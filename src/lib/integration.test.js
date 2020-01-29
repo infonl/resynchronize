@@ -4,7 +4,7 @@ import createAsyncReducer from './createAsyncReducer'
 
 describe('Integration tests', () => {
   const actions = createAsyncActions('LIST')
-  const reducer = createAsyncReducer(actions)
+  const reducer = createAsyncReducer(null, actions)
 
   test('should be able to handle START action', () => {
     expect(reducer(undefined, actions.start())).toEqual({
