@@ -1,5 +1,5 @@
 ---
-id: doc3
+id: react-hooks-example
 title: Reacts + Hooks
 ---
 

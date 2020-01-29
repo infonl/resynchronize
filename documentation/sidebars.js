@@ -7,10 +7,10 @@
 
 module.exports = {
   someSidebar: {
-    Introduction: ['doc1'],
-    Examples: ['doc2', 'doc3'],
-    Advanced: ['doc4'],
-    API: ['doc5'],
+    Introduction: ['getting-started'],
+    Examples: ['redux-react-example', 'react-hooks-example'],
+    Advanced: ['custom-reducers'],
+    API: ['create-actions', 'create-reducers'],
     Features: ['mdx']
   }
 }

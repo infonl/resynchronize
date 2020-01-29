@@ -8,13 +8,13 @@ module.exports = {
   projectName: 'resynchronize', // Usually your repo name.
   themeConfig: {
     navbar: {
-      title: 'My Site',
+      title: 'Resynchronize',
       logo: {
-        alt: 'My Site Logo',
+        alt: 'Resynchronize Logo',
         src: 'img/logo.png'
       },
       links: [
-        { to: 'docs/doc1', label: 'Docs', position: 'left' },
+        { to: 'docs/gettingstarted', label: 'Docs', position: 'left' },
         {
           href: 'https://github.com/infonl/resynchronize',
           label: 'GitHub',
@@ -30,11 +30,7 @@ module.exports = {
           items: [
             {
               label: 'Style Guide',
-              to: 'docs/doc1'
-            },
-            {
-              label: 'Second Doc',
-              to: 'docs/doc2'
+              to: 'docs/gettingstarted'
             }
           ]
         },

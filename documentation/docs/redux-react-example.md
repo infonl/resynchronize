@@ -1,5 +1,5 @@
 ---
-id: doc2
+id: redux-react-example
 title: Redux + React
 ---
 # The classic mix
