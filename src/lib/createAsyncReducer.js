@@ -50,33 +50,36 @@ const handleReset = (payloadReducer = nullifierReducer, errorReducer = nullifier
 /**
  * Basic action handler creator for async actions
  * @param {object} actions Async actions
+ * @param {object} payloadReducers Object with a key for every reducer on every state
+ * @param {object} errorReducers Object with a key for every reducer on every state
  */
-const createActionsHandler = (actions, { start, flush, done, reset, error } = {}) => ({
-  [actions.start]: handleStart(start),
-  [actions.flush]: handleFlush(flush),
-  [actions.done]: handleDone(done),
-  [actions.error]: handleError(error),
-  [actions.reset]: handleReset(reset)
+const createActionsHandler = (actions = {}, payloadReducers = {}, errorReducers = {}) => ({
+  [actions.start]: handleStart(payloadReducers.start, errorReducers.start),
+  [actions.flush]: handleFlush(payloadReducers.flush, errorReducers.flush),
+  [actions.done]: handleDone(payloadReducers.done, errorReducers.done),
+  [actions.error]: handleError(payloadReducers.error, errorReducers.error),
+  [actions.reset]: handleReset(payloadReducers.reset, errorReducers.reset)
 })
 
 /**
  * Create a reducer config to handle async actions
- * @param {*} asyncActions Set of actions that include every state of a fetch process
- * @param {*} asyncHandlers Set of action reducers
+ * @param {Object} asyncActions Set of actions that include every state of a fetch process
+ * @param {Object} payloadHandlers Set of action reducers
+ * @param {Object} errorHandlers Set of action reducers
  * @returns {object} config to be used on a reducer
  */
-const createAsyncReducerConfig = (asyncActions, asyncHandlers) => {
+const _createAsyncReducerConfig = (asyncActions, payloadHandlers, errorHandlers) => {
   let config = {}
 
   // If isnt an AsyncActions all the keys of the object are put into the main reducer
   if (AsyncActions.prototype.isPrototypeOf(asyncActions)) { // eslint-disable-line
-    config = createActionsHandler(asyncActions, asyncHandlers)
+    config = createActionsHandler(asyncActions, payloadHandlers, errorHandlers)
   } else {
     // @TODO CONTROL THAT THEY ARE NORMAL OBJECTS
     Object.keys(asyncActions).forEach(actionKey => {
       config = {
         ...config,
-        ...createActionsHandler(asyncActions[actionKey], asyncHandlers)
+        ...createActionsHandler(asyncActions[actionKey], payloadHandlers, errorHandlers)
       }
     })
   }
@@ -85,29 +88,38 @@ const createAsyncReducerConfig = (asyncActions, asyncHandlers) => {
 }
 
 /**
- * Creates A reducer using a default reducing function and a config with a property for each async state hook
- * If a reducer is not given the default one will be used
- * @param {Function} mainReducer Main reducer
- * @param {Object} payloadReducers Config object with the async hooks: start, done, reset and error
+ * Create a reducer config to handle async actions
+ * @param {*} asyncActions Set of actions that include every state of a fetch process
+ * @param {*} asyncHandlers Set of action reducers
+ * @returns {object} config to be used on a reducer
  */
-const hookAsyncStates = (
-  mainReducer = defaultReducer,
-  payloadReducers = {}
-) => (
-  asyncActionType,
-  currentPayload
-) => {
-  const { start, flush, done, error, reset } = getAsyncKeys(asyncActionType)
-  return createReducer(
-    currentPayload,
-    {
-      [start]: (payloadReducers.start || mainReducer),
-      [done]: (payloadReducers.done || mainReducer),
-      [flush]: (payloadReducers.flush || mainReducer),
-      [reset]: (payloadReducers.reset || mainReducer),
-      [error]: (payloadReducers.error || mainReducer)
-    }
+const createAsyncReducerConfig = (payloadHandlers, errorHandlers) => {
+  let config = {}
+
+  const allAsyncKeys = Object.keys(payloadHandlers).concat(Object.keys(errorHandlers)).reduce(
+    (current, next) => {
+      if (current.includes(next)) {
+        return current
+      } else {
+        current.push(next)
+        return current
+      }
+    },
+    []
   )
+
+  Object.keys(allAsyncKeys).forEach(asyncKey => {
+    config = {
+      ...config,
+      ...createActionsHandler(
+        getAsyncKeys(asyncKey),
+        payloadHandlers[asyncKey],
+        errorHandlers[asyncKey]
+      )
+    }
+  })
+
+  return config
 }
 
 /**
@@ -117,11 +129,24 @@ const hookAsyncStates = (
  * @param {*} asyncHandlers Set of action reducers
  * @returns {function} async reducer
  */
-export const createAsyncReducer = (intiialPayload = null, asyncActions, asyncHandlers) =>
+const _createAsyncReducer = (intiialPayload = getStateShape(), asyncActions, payloadHandlers, errorHandlers) =>
   createReducer(
     getStateShape(INITIAL, intiialPayload, null),
-    createAsyncReducerConfig(asyncActions, asyncHandlers)
+    _createAsyncReducerConfig(asyncActions, payloadHandlers, errorHandlers)
   )
+
+/**
+ * Create a reducer function to handle async actions
+ * @param {*} intiialPayload Initial value of the payload, preferrably serializable
+ * @param {Function} payloadReducer Function used to reduce the payload on the different states
+ * @param {Function} errorReducerConfig Function used to reduce the error on the different states
+ */
+const createAsyncReducer = (intiialPayload = getStateShape(), payloadHandlers, errorHandlers) => {
+  createReducer(
+    getStateShape(INITIAL, intiialPayload, null),
+    createAsyncReducerConfig(payloadHandlers, errorHandlers)
+  )
+}
 
 /*
 // Example of the new implementation?
@@ -131,6 +156,28 @@ const addItemToList = createAyncActions('ADD_ITEM_LIST')
 const clearListError = createAction('CLEAR_LIST_ERROR')
 
 getList.done([])
+
+const newListReducer = createAsyncReducer(
+  [], // INITIAL value
+  { // MAIN PAYLOAD CONFIG
+    // reducer for the async actions, can be filtered by status
+    [getList]: {
+      start: (currentPayload, action) => [] // Start
+      done: (currentPayload, action) => action.payload.map(item => item.id) // Done
+      error: (currentPayload, action) => [] // Error
+    },
+    [addItemToList]: {
+      done: (currentPayload, action) => [...currentPayload, action.payload] // Done
+    }
+  },
+  { // ERROR PAYLOAD CONFIG
+    [getList]: {
+      error: (previousError, action) => return action.payload.message
+    }
+  }
+)
+
+discarded alternatives
 
 const newListReducer = createAsyncReducer(
   [], // INITIAL value
@@ -190,11 +237,13 @@ const classicListReducer = createAsyncReducer(
     }
   }
 )
+
 */
 
 export {
   createAsyncReducer as default,
+  _createAsyncReducer,
   createAsyncReducerConfig,
-  hookAsyncStates,
+  _createAsyncReducerConfig,
   defaultReducer
 }

@@ -1,5 +1,5 @@
 import createAsyncActions from './lib/createAsyncActions'
-import createAsyncReducer from './lib/createAsyncReducer'
+import { _createAsyncReducer as createAsyncReducer } from './lib/createAsyncReducer'
 import getAsyncProps from './lib/getAsyncProps'
 import getGetterAsyncProps from './lib/getGetterAsyncProps'
 import { isDone, isLoading, getError, getPayload } from './lib/utils'

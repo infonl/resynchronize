@@ -1,11 +1,11 @@
 /* global test, expect, describe */
 import createAsyncActions from './createAsyncActions'
-import createAsyncReducer from './createAsyncReducer'
+import { _createAsyncReducer } from './createAsyncReducer'
 import { getStateShape, STARTED, isDone, getPayload, getError } from './utils'
 
 describe('Integration tests', () => {
   const actions = createAsyncActions('LIST')
-  const reducer = createAsyncReducer(null, actions)
+  const reducer = _createAsyncReducer(null, actions)
 
   test('should be able to handle START action', () => {
     expect(reducer(undefined, actions.start())).toEqual(getStateShape(STARTED))
