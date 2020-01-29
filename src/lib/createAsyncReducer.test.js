@@ -1,32 +1,57 @@
 /* global describe, test, expect */
 import {
   createAsyncReducerConfig,
+  createActionsHandler,
+  getAsyncNodeReducer,
+  defaultReducer,
+  nullifierReducer,
   formatHandler,
   isValidConfig,
-  mergeHandlers,
-  createActionsHandler
+  mergeHandlers
 } from './createAsyncReducer'
 import createAsyncActions, { getAsyncKeys } from './createAsyncActions'
 
 describe('New api', () => {
-  test('isValidConfig throws an error if the object format is incorrect', () => {
-    expect(() => isValidConfig()).toThrowError()
-    expect(() => isValidConfig(null)).toThrowError()
-    expect(() => isValidConfig(true)).toThrowError()
-    expect(() => isValidConfig(Boolean(true))).toThrowError()
-    expect(() => isValidConfig(new RegExp('a'))).toThrowError()
-    expect(() => isValidConfig({ })).toThrowError()
-    expect(() => isValidConfig({ done: null })).toThrowError()
-    expect(() => isValidConfig({ done: null, start: () => {} })).toThrowError()
-    expect(() => isValidConfig({ sugar: () => {}, start: () => {} })).toThrowError()
+  describe('defaultReducer', () => {
+    test('with default arguments ', () => {
+      expect(defaultReducer()).toBe(null)
+    })
   })
 
-  test('isValidConfig returns true if the object is completely valid', () => {
-    const valid = isValidConfig({
-      done: () => {}
+  describe('nullifierReducer', () => {
+    test('with default arguments ', () => {
+      expect(nullifierReducer()).toBe(null)
+    })
+  })
+
+  describe('getAsyncNodeReducer', () => {
+    test('with default arguments ', () => {
+      const asyncReducer = getAsyncNodeReducer()
+
+      expect(typeof asyncReducer).toBe('function')
+    })
+  })
+
+  describe('isValidConfig', () => {
+    test('throws an error if the object format is incorrect', () => {
+      expect(isValidConfig()).toBeFalsy()
+      expect(isValidConfig(null)).toBeFalsy()
+      expect(isValidConfig(true)).toBeFalsy()
+      expect(isValidConfig(Boolean(true))).toBeFalsy()
+      expect(isValidConfig(new RegExp('a'))).toBeFalsy()
+      expect(isValidConfig({ })).toBeFalsy()
+      expect(isValidConfig({ done: null })).toBeFalsy()
+      expect(isValidConfig({ done: null, start: () => {} })).toBeFalsy()
+      expect(isValidConfig({ sugar: () => {}, start: () => {} })).toBeFalsy()
     })
 
-    expect(valid).toBeTruthy()
+    test('returns true if the object is completely valid', () => {
+      const valid = isValidConfig({
+        done: () => {}
+      })
+
+      expect(valid).toBeTruthy()
+    })
   })
 
   test('formatHandler succesfully formats a asyncAction to something understandable', () => {
@@ -49,6 +74,14 @@ describe('New api', () => {
 
   test('formatHandler throws an error if one of the handler is not defined', () => {
     expect(() => formatHandler()).toThrowError(/defined/)
+    expect(() => formatHandler({ a: null })).toThrowError()
+    expect(() => formatHandler({ a: true })).toThrowError()
+    expect(() => formatHandler({ a: Boolean(true) })).toThrowError()
+    expect(() => formatHandler({ a: new RegExp('a') })).toThrowError()
+    expect(() => formatHandler({ a: { } })).toThrowError()
+    expect(() => formatHandler({ a: { done: null } })).toThrowError()
+    expect(() => formatHandler({ a: { done: null, start: () => {} } })).toThrowError()
+    expect(() => formatHandler({ a: { sugar: () => {}, start: () => {} } })).toThrowError()
   })
 
   test('formatHandler throws an error if one of the handler keys are not an object with hooks or an AsyncAction', () => {
@@ -134,6 +167,10 @@ describe('New api', () => {
     })
   })
 
+  test('createAsyncReducerConfig returns a error if no actions where used', () => {
+    expect(() => createAsyncReducerConfig()).toThrowError()
+  })
+
   test('createAsyncReducerConfig returns a collection of actions', () => {
     const actions = createAsyncActions('TEST')
     const reducerConfig = createAsyncReducerConfig({ actions })
@@ -164,10 +201,14 @@ describe('New api', () => {
   test('createAsyncReducerConfig returns a sumarized collection of actions when they have mixed types', () => {
     const actions = createAsyncActions('TEST')
     const actions2 = createAsyncActions('TEST2')
-    const reducerConfig = createAsyncReducerConfig({
-      actions,
-      [actions2]: { done: () => {} }
-    })
+    const reducerConfig = createAsyncReducerConfig(
+      {
+        actions
+      },
+      {
+        [actions2]: { done: () => {} }
+      }
+    )
     expect(reducerConfig).toHaveProperty('START_TEST')
     expect(reducerConfig).toHaveProperty('DONE_TEST')
     expect(reducerConfig).toHaveProperty('ERROR_TEST')

@@ -3,7 +3,7 @@ import { getAsyncKeys, isAsyncActions } from './createAsyncActions'
 import { createReducer, getStateShape } from './utils'
 
 /** default reducer for async handling */
-const defaultReducer = (state = null, { payload = null }) => payload || state
+const defaultReducer = (state = null, { payload = null } = {}) => payload || state
 
 const nullifierReducer = () => null
 
@@ -15,7 +15,7 @@ const nullifierReducer = () => null
  * @returns {function} Reducer
  */
 const getAsyncNodeReducer = (
-  status = null,
+  status = INITIAL,
   payloadReducer = defaultReducer,
   errorReducer = defaultReducer
 ) => (
@@ -31,7 +31,7 @@ const getAsyncNodeReducer = (
  * Checks the config properties
  * @param {*} config
  */
-const checkProps = (config = {}) => {
+const checkProps = (config) => {
   const keys = Object.keys(config)
   return !!keys.length && Object.keys(config).every(key => AVAILABLE_ACTIONS.includes(key) && typeof config[key] === 'function')
 }
@@ -42,15 +42,7 @@ const checkProps = (config = {}) => {
  */
 const isValidConfig = config => {
   // At least one of the properties is present AND is a function
-  const valid = config instanceof Object ? checkProps(config) : false
-
-  if (!valid) { // all other types are not allowed
-    throw new Error(`
-      The config object for your handler must be an object with one of the async hooks properties:
-      ${AVAILABLE_ACTIONS.join()}
-    `)
-  }
-  return valid
+  return config instanceof Object ? checkProps(config) : false
 }
 
 /**
@@ -84,7 +76,7 @@ const handleReset = (payloadReducer = nullifierReducer, errorReducer = nullifier
  * @param {object} payloadReducers Object with a key for every reducer on every state
  * @param {object} errorReducers Object with a key for every reducer on every state
  */
-const createActionsHandler = (actions = {}, payloadReducers = {}, errorReducers = {}) => ({
+const createActionsHandler = (actions, payloadReducers = {}, errorReducers = {}) => ({
   [actions.start]: handleStart(payloadReducers.start, errorReducers.start),
   [actions.progress]: handleProgress(payloadReducers.progress, errorReducers.flush),
   [actions.done]: handleDone(payloadReducers.done, errorReducers.done),
@@ -108,7 +100,13 @@ const formatHandler = (handler) => {
           current[handler[prop]] = {}
         } else if (isValidConfig(handler[prop])) {
           current[prop] = handler[prop]
+        } else {
+          throw new Error(`
+            The handler must be an AsyncAction or a config object for with one of the async hooks properties:
+            ${AVAILABLE_ACTIONS.join()}
+          `)
         }
+
         return current
       }, {})
     } else {
@@ -123,9 +121,11 @@ const formatHandler = (handler) => {
 /**
  * Given a set of objects as arguments, each one of those containing the async key identifiers, merges them all and eliminates
  * repeated ones
- * @param  {...any} args
+ * @param  {Object} payload Payload handlers with reducers
+ * @param  {Object} error Error handlers with reducers
+ * @return {Array} Handler keys merged without repetition
  */
-const mergeHandlers = (payload = {}, error = {}) => {
+const mergeHandlers = (payload, error) => {
   const handlers = new Set(Object.keys(payload).concat(Object.keys(error)))
   return [...handlers]
 }
@@ -136,7 +136,7 @@ const mergeHandlers = (payload = {}, error = {}) => {
  * @param {*} errorHandlers Set of actions that include every state of a fetch process
  * @returns {object} config to be used on a reducer
  */
-const createAsyncReducerConfig = (payloadHandlers = {}, errorHandlers = {}) => {
+const createAsyncReducerConfig = (payloadHandlers, errorHandlers = {}) => {
   const formattedPayloadHandlers = formatHandler(payloadHandlers)
   const formattedErrorHandlers = formatHandler(errorHandlers)
 
@@ -164,7 +164,7 @@ const createAsyncReducerConfig = (payloadHandlers = {}, errorHandlers = {}) => {
  * @param {Function} payloadReducer Function used to reduce the payload on the different states
  * @param {Function} errorReducerConfig Function used to reduce the error on the different states
  */
-const createAsyncReducer = (initialPayload = null, payloadHandlers, errorHandlers) =>
+const createAsyncReducer = (initialPayload, payloadHandlers, errorHandlers) =>
   createReducer(
     getStateShape(INITIAL, initialPayload, null),
     createAsyncReducerConfig(payloadHandlers, errorHandlers)
@@ -288,8 +288,10 @@ export {
   createAsyncReducer as default,
   createAsyncReducerConfig,
   createActionsHandler,
+  getAsyncNodeReducer,
   isValidConfig,
   formatHandler,
   mergeHandlers,
-  defaultReducer
+  defaultReducer,
+  nullifierReducer
 }

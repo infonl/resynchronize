@@ -195,6 +195,11 @@ describe('get', () => {
 describe('createReducer', () => {
   const initialState = 'test-state'
 
+  test('shoud return "initialState" if current state is "undefined" and no action is given', () => {
+    const reducer = createReducer(initialState, {})
+    expect(reducer()).toBe('test-state')
+  })
+
   test('shoud return "initialState" if current state is "undefined" and no action match in "actionMap"', () => {
     const actionMap = {}
     const action = { type: 'DONE_TEST', payload: 'test-payload' }
