@@ -91,7 +91,7 @@ export const makeAsyncCall = (
     method: 'GET',
     headers: {
       ...headers,
-      'Accept': 'application/json',
+      Accept: 'application/json',
       'Content-Type': 'application/json; charset=utf-8',
       authorization: token || ''
     },

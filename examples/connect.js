@@ -1,7 +1,10 @@
-import React, { Component, Fragment } from 'react'
+import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import LinearProgress from 'your-favorite-component-library/LoadingProgress'
-import { getGetterAsyncProps, getAsyncKeys } from 'resynchronize'
+import {
+  getGetterAsyncProps, // deprecated
+  getAsyncKeys // deprecated
+} from 'resynchronize'
 
 /**
  * General connector for async properties
