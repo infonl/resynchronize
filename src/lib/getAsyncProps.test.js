@@ -1,6 +1,7 @@
 /* global test, expect, describe */
+import { STARTED } from './consts'
+import { getStateShape } from './utils'
 import getAsyncProps, { getAsyncStatus } from './getAsyncProps'
-import { STARTED, getStateShape } from './utils'
 
 test('getAsyncProps returns an object with 4 basic properties', () => {
   const asyncNode = { status: null, payload: null, error: null }
@@ -25,7 +26,7 @@ describe('getAsyncStatus ', () => {
     const asyncNode = { status: null, payload: null, error: null }
     const properties = getAsyncStatus(asyncNode)
 
-    test('done is dalse', () => {
+    test('done is false', () => {
       expect(properties.done).toBeFalsy()
     })
 

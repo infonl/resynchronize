@@ -1,15 +1,14 @@
 /* global test, expect, describe */
+import { INITIAL, STARTED, DONE, ERROR, CANCELLED } from './consts'
 import {
   getStateShape,
-  INITIAL, STARTED, DONE, ERROR,
   createAction,
   createReducer,
   isDone,
   isLoading,
   getPayload,
   getError,
-  get,
-  CANCELLED
+  get
 } from './utils'
 
 describe('getStateShape', () => {

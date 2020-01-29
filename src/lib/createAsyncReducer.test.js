@@ -83,7 +83,7 @@ describe('New api', () => {
 
     test('has all the async actions on it', () => {
       expect(handlers).toHaveProperty(actions.start)
-      expect(handlers).toHaveProperty(actions.flush)
+      expect(handlers).toHaveProperty(actions.progress)
       expect(handlers).toHaveProperty(actions.done)
       expect(handlers).toHaveProperty(actions.error)
       expect(handlers).toHaveProperty(actions.reset)
