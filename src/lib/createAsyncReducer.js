@@ -1,8 +1,6 @@
 import { AsyncActions } from './createAsyncActions'
 import { createReducer } from './utils'
 
-const ASYNC_INITIAL_STATE = { status: null, payload: null, error: null }
-
 /**
  * Handlers for async actions
  * The reducer is used on the afected property to avoid structure changes on how the library behaves
@@ -72,15 +70,21 @@ const createAsyncReducerConfig = (asyncActions, asyncHandlers) => {
   return config
 }
 
+const ASYNC_INITIAL_STATE = { status: null, payload: null, error: null }
+
 /**
  * Create a reducer function to handle async actions
+ * @param {*} intiialPayload Initial value of the payload, preferrably serializable
  * @param {*} asyncActions Set of actions that include every state of a fetch process
  * @param {*} asyncHandlers Set of action reducers
  * @returns {function} async reducer
  */
-export const createAsyncReducer = (asyncActions, asyncHandlers) =>
+export const createAsyncReducer = (intiialPayload = null, asyncActions, asyncHandlers) =>
   createReducer(
-    ASYNC_INITIAL_STATE,
+    {
+      ...ASYNC_INITIAL_STATE,
+      payload: intiialPayload
+    },
     createAsyncReducerConfig(asyncActions, asyncHandlers)
   )
 

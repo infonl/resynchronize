@@ -94,13 +94,11 @@ class _StatusLoader extends Component {
   render () {
     const { getter, LoadingComponent, ...props } = this.props
     const payloadLoading = somethingLoading(getter, props)
-    return <Fragment>
-      {
-        payloadLoading && LoadingComponent
-          ? <LoadingComponent />
-          : this.renderChildren()
-      }
-    </Fragment>
+    return (
+      <>
+        {payloadLoading && LoadingComponent ? (<LoadingComponent />) : this.renderChildren()}
+      </>
+    )
   }
 }
 
