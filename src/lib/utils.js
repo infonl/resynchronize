@@ -2,6 +2,7 @@ const INITIAL = null
 const STARTED = 'STARTED'
 const DONE = 'DONE'
 const ERROR = 'ERROR'
+const CENCELLED = 'CANCELLED'
 
 const get = (object, property, defaultValue) => object
   ? object[property] || defaultValue
@@ -11,6 +12,7 @@ const get = (object, property, defaultValue) => object
 const isDone = asyncStatus => get(asyncStatus, 'status') === DONE || get(asyncStatus, 'status') === ERROR
 const getError = asyncStatus => get(asyncStatus, 'status') === ERROR && get(asyncStatus, 'error', null)
 const isLoading = asyncStatus => get(asyncStatus, 'status') === STARTED
+const isCancelled = asyncStatus => get(asyncStatus, 'status') === CENCELLED
 const getPayload = asyncStatus => get(asyncStatus, 'payload', null)
 
 const getStateShape = (status = INITIAL, payload = null, error = null) => ({
@@ -43,12 +45,14 @@ export {
   STARTED,
   DONE,
   ERROR,
+  CENCELLED,
   get,
   getStateShape,
   createAction,
   createReducer,
   isDone,
   getError,
+  isCancelled,
   isLoading,
   getPayload
 }
