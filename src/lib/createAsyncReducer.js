@@ -1,4 +1,4 @@
-import { AsyncActions, getAsyncKeys, isAsyncActions } from './createAsyncActions'
+import { getAsyncKeys, isAsyncActions } from './createAsyncActions'
 import { createReducer, getStateShape, INITIAL, STARTED, DONE, ERROR, CANCELLED } from './utils'
 
 /** default reducer for async handling */
@@ -85,32 +85,6 @@ const createActionsHandler = (actions = {}, payloadReducers = {}, errorReducers 
 })
 
 /**
- * Create a reducer config to handle async actions
- * @param {Object} asyncActions Set of actions that include every state of a fetch process
- * @param {Object} payloadHandlers Set of action reducers
- * @param {Object} errorHandlers Set of action reducers
- * @returns {object} config to be used on a reducer
- */
-const _createAsyncReducerConfig = (asyncActions, payloadHandlers, errorHandlers) => {
-  let config = {}
-
-  // If isnt an AsyncActions all the keys of the object are put into the main reducer
-  if (AsyncActions.prototype.isPrototypeOf(asyncActions)) { // eslint-disable-line
-    config = createActionsHandler(asyncActions, payloadHandlers, errorHandlers)
-  } else {
-    // @TODO CONTROL THAT THEY ARE NORMAL OBJECTS
-    Object.keys(asyncActions).forEach(actionKey => {
-      config = {
-        ...config,
-        ...createActionsHandler(asyncActions[actionKey], payloadHandlers, errorHandlers)
-      }
-    })
-  }
-
-  return config
-}
-
-/**
  * Formats an individual handler to shape it to asyncActionKey => object => reducers
  * @param {Object} handler Any object containing the key that are either asyncActionObjects or objects with the reducer hooks
  */
@@ -188,19 +162,6 @@ const createAsyncReducerConfig = (payloadHandlers = {}, errorHandlers = {}) => {
     {}
   )
 }
-
-/**
- * Create a reducer function to handle async actions
- * @param {*} initialPayload Initial value of the payload, preferrably serializable
- * @param {*} asyncActions Set of actions that include every state of a fetch process
- * @param {*} asyncHandlers Set of action reducers
- * @returns {function} async reducer
- */
-const _createAsyncReducer = (initialPayload = null, asyncActions, payloadHandlers, errorHandlers) =>
-  createReducer(
-    getStateShape(INITIAL, initialPayload, null),
-    _createAsyncReducerConfig(asyncActions, payloadHandlers, errorHandlers)
-  )
 
 /**
  * Create a reducer function to handle async actions
@@ -330,9 +291,7 @@ const classicListReducer = createAsyncReducer(
 
 export {
   createAsyncReducer as default,
-  _createAsyncReducer,
   createAsyncReducerConfig,
-  _createAsyncReducerConfig,
   createActionsHandler,
   isValidConfig,
   formatHandler,
