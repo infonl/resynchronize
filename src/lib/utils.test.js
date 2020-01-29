@@ -133,10 +133,10 @@ describe('error state', () => {
   const asyncNode = getStateShape(ERROR, 'hello world!', 'Some error!')
 
   test('isDone returns false', () => {
-    expect(isDone(asyncNode)).toBeTruthy()
+    expect(isDone(asyncNode)).toBeFalsy()
   })
 
-  test('isLoading returns true', () => {
+  test('isLoading returns false', () => {
     expect(isLoading(asyncNode)).toBeFalsy()
   })
 
@@ -200,7 +200,7 @@ describe('createReducer', () => {
     const actionMap = {}
     const action = { type: 'DONE_TEST', payload: 'test-payload' }
     const reducer = createReducer(initialState, actionMap)
-    expect(reducer(undefined, action)).toBe(initialState)
+    expect(reducer(undefined, action)).toBe('test-state')
   })
 
   test('should return last state if no action match in "actionMap"', () => {
