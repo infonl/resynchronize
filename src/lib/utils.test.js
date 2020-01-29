@@ -8,7 +8,8 @@ import {
   isLoading,
   getPayload,
   getError,
-  get
+  get,
+  CANCELLED
 } from './utils'
 
 describe('getStateShape', () => {
@@ -141,6 +142,26 @@ describe('error state', () => {
 
   test('getPayload returns the payload', () => {
     expect(getPayload(asyncNode)).toBe(asyncNode.payload)
+  })
+
+  test('error returns the error', () => {
+    expect(getError(asyncNode)).toBe(asyncNode.error)
+  })
+})
+
+describe('cancelled state', () => {
+  const asyncNode = getStateShape(CANCELLED, null, 'cancelled')
+
+  test('isDone returns false', () => {
+    expect(isDone(asyncNode)).toBeFalsy()
+  })
+
+  test('isLoading returns true', () => {
+    expect(isLoading(asyncNode)).toBeFalsy()
+  })
+
+  test('getPayload returns the payload', () => {
+    expect(getPayload(asyncNode)).toBe(null)
   })
 
   test('error returns the error', () => {

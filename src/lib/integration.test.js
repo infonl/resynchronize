@@ -36,6 +36,14 @@ describe('Old API', () => {
       expect(getError(state)).toBe('error')
     })
 
+    test('should be able to handle CANCEL action', () => {
+      const state = reducer(undefined, actions.cancel())
+
+      expect(isDone(state)).toBeFalsy()
+      expect(getPayload(state)).toBe(null)
+      expect(getError(state)).toBe('cancelled')
+    })
+
     test('should be able to handle RESET action with state after START', () => {
       const state = reducer(undefined, actions.start())
       const newState = reducer(state, actions.reset())
@@ -105,6 +113,14 @@ describe('New API', () => {
       expect(isDone(state)).toBeTruthy()
       expect(getPayload(state)).toBe(null)
       expect(getError(state)).toBe('error')
+    })
+
+    test('should be able to handle CANCEL action', () => {
+      const state = reducer(undefined, actions.cancel())
+
+      expect(isDone(state)).toBeFalsy()
+      expect(getPayload(state)).toBe(null)
+      expect(getError(state)).toBe('cancelled')
     })
 
     test('should be able to handle RESET action with state after START', () => {

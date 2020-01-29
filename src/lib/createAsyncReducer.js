@@ -1,5 +1,5 @@
 import { AsyncActions, getAsyncKeys, isAsyncActions } from './createAsyncActions'
-import { createReducer, getStateShape, INITIAL, STARTED, DONE, ERROR, CANCEL } from './utils'
+import { createReducer, getStateShape, INITIAL, STARTED, DONE, ERROR, CANCELLED } from './utils'
 
 /** default reducer for async handling */
 const defaultReducer = (state = null, { payload = null }) => payload || state
@@ -66,7 +66,7 @@ const handleError = (payloadReducer = nullifierReducer, errorReducer) =>
   getAsyncNodeReducer(ERROR, payloadReducer, errorReducer)
 
 const handleCancel = (payloadReducer = nullifierReducer, errorReducer = cancelledReducer) =>
-  getAsyncNodeReducer(CANCEL, payloadReducer, errorReducer)
+  getAsyncNodeReducer(CANCELLED, payloadReducer, errorReducer)
 
 const handleReset = (payloadReducer = nullifierReducer, errorReducer = nullifierReducer) =>
   getAsyncNodeReducer(INITIAL, payloadReducer, errorReducer)

@@ -2,7 +2,7 @@ const INITIAL = null
 const STARTED = 'STARTED'
 const DONE = 'DONE'
 const ERROR = 'ERROR'
-const CENCELLED = 'CANCELLED'
+const CANCELLED = 'CANCELLED'
 
 const get = (object, property, defaultValue) => object
   ? object[property] || defaultValue
@@ -10,9 +10,12 @@ const get = (object, property, defaultValue) => object
 
 // Basic set of functions to manage the state of async actions and reducers
 const isDone = asyncStatus => get(asyncStatus, 'status') === DONE || get(asyncStatus, 'status') === ERROR
-const getError = asyncStatus => get(asyncStatus, 'status') === ERROR && get(asyncStatus, 'error', null)
+const getError = asyncStatus => {
+  const status = get(asyncStatus, 'status')
+  return (status === ERROR || status === CANCELLED) && get(asyncStatus, 'error', null)
+}
 const isLoading = asyncStatus => get(asyncStatus, 'status') === STARTED
-const isCancelled = asyncStatus => get(asyncStatus, 'status') === CENCELLED
+const isCancelled = asyncStatus => get(asyncStatus, 'status') === CANCELLED
 const getPayload = asyncStatus => get(asyncStatus, 'payload', null)
 
 const getStateShape = (status = INITIAL, payload = null, error = null) => ({
@@ -45,7 +48,7 @@ export {
   STARTED,
   DONE,
   ERROR,
-  CENCELLED,
+  CANCELLED,
   get,
   getStateShape,
   createAction,
