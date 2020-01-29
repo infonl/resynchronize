@@ -21,7 +21,7 @@ To create 'async actions' we use `createAsyncActions`: this creates a set of 4 a
 const getListAction = createAsyncActions('GET_LIST')
 ```
 
-This `getListAction` object has four properties, each one an action that can be dispatched
+This `getListAction` object has a set of properties, each one an action that can be dispatched
 
 ### Step II - dispatch actions on the right moment
 With this action object (the actions are inside as properties) and a simple `thunk` we set up a method that uses this actions on the right moment, example:
@@ -90,7 +90,7 @@ const SubmitButton = () => {
 
 const asyncStatus = getAsyncProps(state.yourAsyncNode)
   return (
-    asyncStatus.loading 
+    asyncStatus.loading
     ? <span>Loading..</span>
     : <button>Submit</button>
   )
