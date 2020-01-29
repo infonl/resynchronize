@@ -5,10 +5,10 @@ describe('createAsyncActions', () => {
   const actions = createAsyncActions.default('TEST')
 
   test('returns an object with 3 actions', () => {
-    expect(actions).toHaveProperty('START')
-    expect(actions).toHaveProperty('DONE')
-    expect(actions).toHaveProperty('ERROR')
-    expect(actions).toHaveProperty('RESET')
+    expect(actions).toHaveProperty('start')
+    expect(actions).toHaveProperty('done')
+    expect(actions).toHaveProperty('error')
+    expect(actions).toHaveProperty('reset')
   })
 
   test('stringified returns the type', () => {
@@ -16,16 +16,16 @@ describe('createAsyncActions', () => {
   })
 
   test('properties stringified return the concatenation', () => {
-    expect(`${actions.START}`).toBe('START_TEST')
-    expect(`${actions.DONE}`).toBe('DONE_TEST')
-    expect(`${actions.ERROR}`).toBe('ERROR_TEST')
-    expect(`${actions.RESET}`).toBe('RESET_TEST')
+    expect(`${actions.start}`).toBe('START_TEST')
+    expect(`${actions.done}`).toBe('DONE_TEST')
+    expect(`${actions.error}`).toBe('ERROR_TEST')
+    expect(`${actions.reset}`).toBe('RESET_TEST')
   })
 
   test('properties type return the concatenation too', () => {
-    expect(actions.START.type).toBe('START_TEST')
-    expect(actions.DONE.type).toBe('DONE_TEST')
-    expect(actions.ERROR.type).toBe('ERROR_TEST')
-    expect(actions.RESET.type).toBe('RESET_TEST')
+    expect(actions.start.type).toBe('START_TEST')
+    expect(actions.done.type).toBe('DONE_TEST')
+    expect(actions.error.type).toBe('ERROR_TEST')
+    expect(actions.reset.type).toBe('RESET_TEST')
   })
 })
