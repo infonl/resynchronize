@@ -1,8 +1,4 @@
-const INITIAL = null
-const STARTED = 'STARTED'
-const DONE = 'DONE'
-const ERROR = 'ERROR'
-const CANCELLED = 'CANCELLED'
+import { INITIAL, STARTED, DONE, ERROR, CANCELLED } from './consts'
 
 const get = (object, property, defaultValue) => object
   ? object[property] || defaultValue
@@ -43,11 +39,6 @@ const createReducer = (initialState, actionMap) =>
       : state
 
 export {
-  INITIAL,
-  STARTED,
-  DONE,
-  ERROR,
-  CANCELLED,
   get,
   getStateShape,
   createAction,

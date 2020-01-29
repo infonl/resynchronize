@@ -29,9 +29,9 @@ const expectStart = (current, reducer, actions, actionPayload, payload, error) =
   })
 }
 
-const expectFlush = (current, reducer, actions, actionPayload, payload, error) => {
-  test('shoud be able to handle FLUSH action', () => {
-    const state = reducer(current, actions.flush(actionPayload))
+const expectProgress = (current, reducer, actions, actionPayload, payload, error) => {
+  test('shoud be able to handle progress action', () => {
+    const state = reducer(current, actions.progress(actionPayload))
 
     expect(isDone(state)).toBeFalsy()
     expect(isLoading(state)).toBeTruthy()
@@ -101,7 +101,7 @@ describe('Integration tests', () => {
     describe('without state', () => {
       expectDefault(undefined, reducer)
       expectStart(undefined, reducer, actions, null, null, null)
-      expectFlush(undefined, reducer, actions, 'test-flush', 'test-flush', null)
+      expectProgress(undefined, reducer, actions, 'test-progress', 'test-progress', null)
       expectDone(undefined, reducer, actions, 'test-payload', 'test-payload', null)
       expectError(undefined, reducer, actions, 'test-error', null, 'test-error')
       expectCancel(undefined, reducer, actions, 'test-cancelled', null, 'test-cancelled')
@@ -112,18 +112,18 @@ describe('Integration tests', () => {
       const state = reducer(undefined, actions.start('start-payload'))
       expectDefault(state, reducer)
       expectStart(state, reducer, actions, 'start-payload', 'start-payload', null)
-      expectFlush(state, reducer, actions, 'test-flush', 'test-flush', null)
+      expectProgress(state, reducer, actions, 'test-progress', 'test-progress', null)
       expectDone(state, reducer, actions, 'test-payload', 'test-payload', null)
       expectError(state, reducer, actions, 'test-error', null, 'test-error')
       expectCancel(state, reducer, actions, 'test-cancelled', null, 'test-cancelled')
       expectReset(state, reducer, actions, undefined, null, null)
     })
 
-    describe('with state after flush', () => {
-      const state = reducer(undefined, actions.flush('payload'))
+    describe('with state after progress', () => {
+      const state = reducer(undefined, actions.progress('payload'))
       expectDefault(state, reducer)
       expectStart(state, reducer, actions, 'start-payload', 'start-payload', null)
-      expectFlush(state, reducer, actions, 'test-flush', 'test-flush', null)
+      expectProgress(state, reducer, actions, 'test-progress', 'test-progress', null)
       expectDone(state, reducer, actions, 'test-payload', 'test-payload', null)
       expectError(state, reducer, actions, 'test-error', null, 'test-error')
       expectCancel(state, reducer, actions, 'test-cancelled', null, 'test-cancelled')
@@ -134,7 +134,7 @@ describe('Integration tests', () => {
       const state = reducer(undefined, actions.done('payload'))
       expectDefault(state, reducer)
       expectStart(state, reducer, actions, 'start-payload', 'start-payload', null)
-      expectFlush(state, reducer, actions, 'test-flush', 'test-flush', null)
+      expectProgress(state, reducer, actions, 'test-progress', 'test-progress', null)
       expectDone(state, reducer, actions, 'test-payload', 'test-payload', null)
       expectError(state, reducer, actions, 'test-error', null, 'test-error')
       expectCancel(state, reducer, actions, 'test-cancelled', null, 'test-cancelled')
@@ -145,10 +145,155 @@ describe('Integration tests', () => {
       const state = reducer(undefined, actions.error('payload'))
       expectDefault(state, reducer)
       expectStart(state, reducer, actions, 'start-payload', 'start-payload', null)
-      expectFlush(state, reducer, actions, 'test-flush', 'test-flush', null)
+      expectProgress(state, reducer, actions, 'test-progress', 'test-progress', null)
       expectDone(state, reducer, actions, 'test-payload', 'test-payload', null)
       expectError(state, reducer, actions, 'test-error', null, 'test-error')
       expectCancel(state, reducer, actions, 'test-cancelled', null, 'test-cancelled')
+      expectReset(state, reducer, actions, undefined, null, null)
+    })
+  })
+
+  describe('Actions on an object configuration', () => {
+    const actions = createAsyncActions('LIST')
+    const reducer = createAsyncReducer(null, { actions })
+
+    describe('without state', () => {
+      expectDefault(undefined, reducer)
+      expectStart(undefined, reducer, actions, null, null, null)
+      expectProgress(undefined, reducer, actions, 'test-progress', 'test-progress', null)
+      expectDone(undefined, reducer, actions, 'test-payload', 'test-payload', null)
+      expectError(undefined, reducer, actions, 'test-error', null, 'test-error')
+      expectCancel(undefined, reducer, actions, 'test-cancelled', null, 'test-cancelled')
+      expectReset(undefined, reducer, actions, undefined, null, null)
+    })
+
+    describe('with state after start', () => {
+      const state = reducer(undefined, actions.start('start-payload'))
+      expectDefault(state, reducer)
+      expectStart(state, reducer, actions, 'start-payload', 'start-payload', null)
+      expectProgress(state, reducer, actions, 'test-progress', 'test-progress', null)
+      expectDone(state, reducer, actions, 'test-payload', 'test-payload', null)
+      expectError(state, reducer, actions, 'test-error', null, 'test-error')
+      expectCancel(state, reducer, actions, 'test-cancelled', null, 'test-cancelled')
+      expectReset(state, reducer, actions, undefined, null, null)
+    })
+
+    describe('with state after progress', () => {
+      const state = reducer(undefined, actions.progress('payload'))
+      expectDefault(state, reducer)
+      expectStart(state, reducer, actions, 'start-payload', 'start-payload', null)
+      expectProgress(state, reducer, actions, 'test-progress', 'test-progress', null)
+      expectDone(state, reducer, actions, 'test-payload', 'test-payload', null)
+      expectError(state, reducer, actions, 'test-error', null, 'test-error')
+      expectCancel(state, reducer, actions, 'test-cancelled', null, 'test-cancelled')
+      expectReset(state, reducer, actions, undefined, null, null)
+    })
+
+    describe('with state after done', () => {
+      const state = reducer(undefined, actions.done('payload'))
+      expectDefault(state, reducer)
+      expectStart(state, reducer, actions, 'start-payload', 'start-payload', null)
+      expectProgress(state, reducer, actions, 'test-progress', 'test-progress', null)
+      expectDone(state, reducer, actions, 'test-payload', 'test-payload', null)
+      expectError(state, reducer, actions, 'test-error', null, 'test-error')
+      expectCancel(state, reducer, actions, 'test-cancelled', null, 'test-cancelled')
+      expectReset(state, reducer, actions, undefined, null, null)
+    })
+
+    describe('with state after error', () => {
+      const state = reducer(undefined, actions.error('payload'))
+      expectDefault(state, reducer)
+      expectStart(state, reducer, actions, 'start-payload', 'start-payload', null)
+      expectProgress(state, reducer, actions, 'test-progress', 'test-progress', null)
+      expectDone(state, reducer, actions, 'test-payload', 'test-payload', null)
+      expectError(state, reducer, actions, 'test-error', null, 'test-error')
+      expectCancel(state, reducer, actions, 'test-cancelled', null, 'test-cancelled')
+      expectReset(state, reducer, actions, undefined, null, null)
+    })
+  })
+
+  describe('Actions on an object configuration with custom reducers', () => {
+    const actions = createAsyncActions('LIST')
+    const secondActions = createAsyncActions('LIST-TWO')
+
+    const reducerCheck = (state, action) => {
+      // console.info(state, action)
+      return state
+    }
+
+    const reducer = createAsyncReducer(
+      null,
+      {
+        [actions]: {
+          done: (state, action) => action.payload ? `${action.payload}+extra` : state
+        },
+        [secondActions]: {
+          done: (state, action) => action.payload ? `${action.payload}+extra-two` : state
+        }
+      },
+      {
+        [actions]: {
+          start: reducerCheck,
+          progress: reducerCheck,
+          done: reducerCheck,
+          cancel: (state, action) => action.payload ? `why:${action.payload}` : state,
+          error: (state, action) => action.payload ? `error:${action.payload}` : state
+        }
+      }
+    )
+
+    describe('without state', () => {
+      expectDefault(undefined, reducer)
+      expectStart(undefined, reducer, actions, null, null, null)
+      expectProgress(undefined, reducer, actions, 'test-progress', 'test-progress', null)
+      expectDone(undefined, reducer, actions, 'test-payload', 'test-payload+extra', null)
+      expectDone(undefined, reducer, secondActions, 'test-payload', 'test-payload+extra-two', null)
+      expectError(undefined, reducer, actions, 'test-error', null, 'error:test-error')
+      expectCancel(undefined, reducer, actions, 'test-cancelled', null, 'why:test-cancelled')
+      expectReset(undefined, reducer, actions, undefined, null, null)
+    })
+
+    describe('with state after start', () => {
+      const state = reducer(undefined, actions.start('start-payload'))
+      expectDefault(state, reducer)
+      expectStart(state, reducer, actions, 'start-payload', 'start-payload', null)
+      expectProgress(state, reducer, actions, 'test-progress', 'test-progress', null)
+      expectDone(state, reducer, actions, 'test-payload', 'test-payload+extra', null)
+      expectError(state, reducer, actions, 'test-error', null, 'error:test-error')
+      expectCancel(state, reducer, actions, 'test-cancelled', null, 'why:test-cancelled')
+      expectReset(state, reducer, actions, undefined, null, null)
+    })
+
+    describe('with state after progress', () => {
+      const state = reducer(undefined, actions.progress('payload'))
+      expectDefault(state, reducer)
+      expectStart(state, reducer, actions, 'start-payload', 'start-payload', null)
+      expectProgress(state, reducer, actions, 'test-progress', 'test-progress', null)
+      expectDone(state, reducer, actions, 'test-payload', 'test-payload+extra', null)
+      expectError(state, reducer, actions, 'test-error', null, 'error:test-error')
+      expectCancel(state, reducer, actions, 'test-cancelled', null, 'why:test-cancelled')
+      expectReset(state, reducer, actions, undefined, null, null)
+    })
+
+    describe('with state after done', () => {
+      const state = reducer(undefined, actions.done('payload'))
+      expectDefault(state, reducer)
+      expectStart(state, reducer, actions, 'start-payload', 'start-payload', null)
+      expectProgress(state, reducer, actions, 'test-progress', 'test-progress', null)
+      expectDone(state, reducer, actions, 'test-payload', 'test-payload+extra', null)
+      expectError(state, reducer, actions, 'test-error', null, 'error:test-error')
+      expectCancel(state, reducer, actions, 'test-cancelled', null, 'why:test-cancelled')
+      expectReset(state, reducer, actions, undefined, null, null)
+    })
+
+    describe('with state after error', () => {
+      const state = reducer(undefined, actions.error('payload'))
+      expectDefault(state, reducer)
+      expectStart(state, reducer, actions, 'start-payload', 'start-payload', 'error:payload')
+      expectProgress(state, reducer, actions, 'test-progress', 'test-progress', null)
+      expectDone(state, reducer, actions, 'test-payload', 'test-payload+extra', 'error:payload')
+      expectError(state, reducer, actions, 'test-error', null, 'error:test-error')
+      expectCancel(state, reducer, actions, 'test-cancelled', null, 'why:test-cancelled')
       expectReset(state, reducer, actions, undefined, null, null)
     })
   })

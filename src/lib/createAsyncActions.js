@@ -1,14 +1,14 @@
+import { AVAILABLE_ACTIONS } from './consts'
 import { createAction } from './utils'
 
 function getAsyncKeys (storeKey) {
-  return {
-    start: `START_${storeKey}`,
-    flush: `FLUSH_${storeKey}`,
-    done: `DONE_${storeKey}`,
-    error: `ERROR_${storeKey}`,
-    cancel: `CANCEL_${storeKey}`,
-    reset: `RESET_${storeKey}`
-  }
+  return AVAILABLE_ACTIONS.reduce(
+    (keys, key) => {
+      keys[key] = `${key.toUpperCase()}_${storeKey}`
+      return keys
+    },
+    {}
+  )
 }
 
 /**
@@ -16,13 +16,10 @@ function getAsyncKeys (storeKey) {
  * @param {string} storeKey unique identifier for the store
  */
 function AsyncActions (storeKey) {
-  const { start, flush, done, error, cancel, reset } = getAsyncKeys(storeKey)
-  this.start = createAction(start)
-  this.flush = createAction(flush)
-  this.done = createAction(done)
-  this.error = createAction(error)
-  this.cancel = createAction(cancel)
-  this.reset = createAction(reset)
+  const asyncKeys = getAsyncKeys(storeKey)
+
+  AVAILABLE_ACTIONS.forEach(key => { this[key] = createAction(asyncKeys[key]) })
+
   this.toString = () => storeKey
 }
 
@@ -41,6 +38,7 @@ const isAsyncActions = action =>
   AsyncActions.prototype.isPrototypeOf(action) // eslint-disable-line
 
 export {
+  AVAILABLE_ACTIONS,
   getAsyncKeys,
   isAsyncActions,
   createAsyncActions as default,

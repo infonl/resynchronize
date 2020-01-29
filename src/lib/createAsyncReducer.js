@@ -1,5 +1,6 @@
+import { AVAILABLE_ACTIONS, INITIAL, STARTED, DONE, ERROR, CANCELLED } from './consts'
 import { getAsyncKeys, isAsyncActions } from './createAsyncActions'
-import { createReducer, getStateShape, INITIAL, STARTED, DONE, ERROR, CANCELLED } from './utils'
+import { createReducer, getStateShape } from './utils'
 
 /** default reducer for async handling */
 const defaultReducer = (state = null, { payload = null }) => payload || state
@@ -23,7 +24,7 @@ const getAsyncNodeReducer = (
 ) => ({
   status,
   payload: payloadReducer(state.payload, action),
-  error: errorReducer(state.errornpm, action)
+  error: errorReducer(state.error, action)
 })
 
 /**
@@ -31,16 +32,18 @@ const getAsyncNodeReducer = (
  * @param {*} config Property to be checked
  */
 const isValidConfig = config => {
-  const props = ['start', 'flush', 'done', 'error', 'cancel', 'reset']
   let valid = false
 
   if (!!config && typeof config === 'object') { // At least one of the properties is present AND is a function
     const keys = Object.keys(config)
-    valid = !!keys.length && keys.every(key => props.includes(key) && typeof config[key] === 'function')
+    valid = !!keys.length && keys.every(key => AVAILABLE_ACTIONS.includes(key) && typeof config[key] === 'function')
   }
 
   if (!valid) { // all other types are not allowed
-    throw new Error(`The config object for your handler must be an object with one of the async hooks properties: ${props.join(', ')}`)
+    throw new Error(`
+      The config object for your handler must be an object with one of the async hooks properties:
+      ${AVAILABLE_ACTIONS.join(', ')}
+    `)
   }
   return valid
 }
@@ -54,7 +57,7 @@ const isValidConfig = config => {
 const handleStart = (payloadReducer, errorReducer = nullifierReducer) =>
   getAsyncNodeReducer(STARTED, payloadReducer, errorReducer)
 
-const handleFlush = (payloadReducer, errorReducer = nullifierReducer) =>
+const handleProgress = (payloadReducer, errorReducer = nullifierReducer) =>
   getAsyncNodeReducer(STARTED, payloadReducer, errorReducer)
 
 const handleDone = (payloadReducer, errorReducer = nullifierReducer) =>
@@ -77,7 +80,7 @@ const handleReset = (payloadReducer = nullifierReducer, errorReducer = nullifier
  */
 const createActionsHandler = (actions = {}, payloadReducers = {}, errorReducers = {}) => ({
   [actions.start]: handleStart(payloadReducers.start, errorReducers.start),
-  [actions.flush]: handleFlush(payloadReducers.flush, errorReducers.flush),
+  [actions.progress]: handleProgress(payloadReducers.progress, errorReducers.flush),
   [actions.done]: handleDone(payloadReducers.done, errorReducers.done),
   [actions.error]: handleError(payloadReducers.error, errorReducers.error),
   [actions.cancel]: handleCancel(payloadReducers.cancel, errorReducers.cancel),
