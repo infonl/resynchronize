@@ -11,6 +11,14 @@ describe('Integration tests', () => {
     expect(reducer(undefined, actions.start())).toEqual(getStateShape(STARTED))
   })
 
+  test('should be able to handle FLUSH action', () => {
+    const state = reducer(undefined, actions.flush('test-payload'))
+
+    expect(isDone(state)).toBeFalsy()
+    expect(getPayload(state)).toBe('test-payload')
+    expect(getError(state)).toBeFalsy()
+  })
+
   test('should be able to handle DONE action', () => {
     const state = reducer(undefined, actions.done('test-payload'))
 
@@ -29,28 +37,37 @@ describe('Integration tests', () => {
 
   test('should be able to handle RESET action with state after START', () => {
     const state = reducer(undefined, actions.start())
-    expect(reducer(state, actions.reset())).toEqual({
-      status: null,
-      error: null,
-      payload: null
-    })
+    const newState = reducer(state, actions.reset())
+
+    expect(isDone(newState)).toBeFalsy()
+    expect(getPayload(newState)).toBe(null)
+    expect(getError(newState)).toBeFalsy()
+  })
+
+  test('should be able to handle RESET action with state after flush', () => {
+    const state = reducer(undefined, actions.flush('test-payload'))
+    const newState = reducer(state, actions.reset())
+
+    expect(isDone(newState)).toBeFalsy()
+    expect(getPayload(newState)).toBe(null)
+    expect(getError(newState)).toBeFalsy()
   })
 
   test('should be able to handle RESET action with state after DONE', () => {
     const state = reducer(undefined, actions.done('test-payload'))
-    expect(reducer(state, actions.reset())).toEqual({
-      status: null,
-      error: null,
-      payload: null
-    })
+    const newState = reducer(state, actions.reset())
+
+    expect(isDone(newState)).toBeFalsy()
+    expect(getPayload(newState)).toBe(null)
+    expect(getError(newState)).toBeFalsy()
   })
 
   test('should be able to handle RESET action with state after ERROR', () => {
     const state = reducer(undefined, actions.error('error'))
-    expect(reducer(state, actions.reset())).toEqual({
-      status: null,
-      error: null,
-      payload: null
-    })
+    const newState = reducer(state, actions.reset())
+
+    expect(isDone(newState)).toBeFalsy()
+    expect(getPayload(newState)).toBe(null)
+    expect(getError(newState)).toBeFalsy()
   })
 })
