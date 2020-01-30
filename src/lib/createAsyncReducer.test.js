@@ -115,6 +115,7 @@ describe('New api', () => {
     describe('created by default', () => {
       const actions = getAsyncKeys('TEST')
       const handlers = createActionsHandler(
+        undefined,
         actions
       )
 
@@ -130,6 +131,7 @@ describe('New api', () => {
     describe('created with simple config', () => {
       const actions = getAsyncKeys('TEST')
       const handlers = createActionsHandler(
+        undefined,
         actions,
         {
           done: () => null
@@ -148,6 +150,7 @@ describe('New api', () => {
     describe('created with complex config', () => {
       const actions = getAsyncKeys('TEST')
       const handlers = createActionsHandler(
+        undefined,
         actions,
         {
           done: () => null
@@ -173,7 +176,7 @@ describe('New api', () => {
 
   test('createAsyncReducerConfig returns a collection of actions', () => {
     const actions = createAsyncActions('TEST')
-    const reducerConfig = createAsyncReducerConfig({ actions })
+    const reducerConfig = createAsyncReducerConfig(undefined, { actions })
 
     expect(reducerConfig).toHaveProperty('START_TEST')
     expect(reducerConfig).toHaveProperty('DONE_TEST')
@@ -184,10 +187,13 @@ describe('New api', () => {
   test('createAsyncReducerConfig returns a sumarized collection of actions', () => {
     const actions = createAsyncActions('TEST')
     const actions2 = createAsyncActions('TEST2')
-    const reducerConfig = createAsyncReducerConfig({
-      actions,
-      actions2
-    })
+    const reducerConfig = createAsyncReducerConfig(
+      undefined,
+      {
+        actions,
+        actions2
+      }
+    )
     expect(reducerConfig).toHaveProperty('START_TEST')
     expect(reducerConfig).toHaveProperty('DONE_TEST')
     expect(reducerConfig).toHaveProperty('ERROR_TEST')
@@ -202,6 +208,7 @@ describe('New api', () => {
     const actions = createAsyncActions('TEST')
     const actions2 = createAsyncActions('TEST2')
     const reducerConfig = createAsyncReducerConfig(
+      undefined,
       {
         actions
       },

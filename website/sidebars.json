@@ -1,0 +1,8 @@
+{
+  "docs": {
+    "Introduction": ["getting-started"],
+    "Examples": ["redux-react-example", "react-hooks-example"],
+    "API": ["create-actions", "create-reducers", "get-async-props", "getters"],
+    "Advanced": ["custom-reducers"]
+  }
+}

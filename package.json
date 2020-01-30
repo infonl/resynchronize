@@ -1,6 +1,6 @@
 {
   "name": "resynchronize",
-  "version": "1.1.2",
+  "version": "2.0.1",
   "description": "Redux utils to manage async functions and promises",
   "license": "MIT",
   "main": "dist/bundle.js",
@@ -23,6 +23,7 @@
     "test:cov-watch": "npm test -- --coverage --watch",
     "check": "npm run lint && npm run test",
     "build": "npm run check && rollup -c",
+    "publish": "npm publish",
     "stryker": "stryker run"
   },
   "husky": {

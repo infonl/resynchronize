@@ -1,9 +1,10 @@
-# RESYNCHRONIZE
-![npm (scoped)](https://img.shields.io/azure-devops/coverage/swellaby/opensource/25.svg)
+---
+id: getting-started
+title: Getting started
+sidebar_label: Getting started
+---
 
-Simple library/bunch of functionalities/*bunch of notes* on files to fetch/promise async payloads and put a meaninful state for your appplication, either way if is redux or react hooks.
-
-This tries to follow the standards put on place by the creators of redux, but it's still opinionated, feel free to add your own pretty features!
+# The beggining
 
 ## Install
 Copy and run this in your project folder
@@ -128,5 +129,5 @@ const payload = getPayload(state.list)
 ---
 ## Connect?
 Now, we need to use this to render something right? check the examples
-- [Redux + React example](https://infonl.github.io/resynchronize/docs/redux-react-example)
+- [Redux + React example](redux-react-example.md)
 
