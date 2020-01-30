@@ -1,0 +1,122 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>Custom reducers · Resynchronize</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="# When you want to manage your payloads and errors"/><meta name="docsearch:language" content="en"/><meta property="og:title" content="Custom reducers · Resynchronize"/><meta property="og:type" content="website"/><meta property="og:url" content="https://infonl.github.io//resynchronize/"/><meta property="og:description" content="# When you want to manage your payloads and errors"/><meta property="og:image" content="https://infonl.github.io//resynchronize/img/undraw_online.svg"/><meta name="twitter:card" content="summary"/><meta name="twitter:image" content="https://infonl.github.io//resynchronize/img/undraw_tweetstorm.svg"/><link rel="shortcut icon" href="/resynchronize/img/logo.png"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css"/><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><script src="/resynchronize/js/scrollSpy.js"></script><link rel="stylesheet" href="/resynchronize/css/main.css"/><script src="/resynchronize/js/codetabs.js"></script></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/resynchronize/"><img class="logo" src="/resynchronize/img/logo.png" alt="Resynchronize"/><h2 class="headerTitleWithLogo">Resynchronize</h2></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class="siteNavGroupActive"><a href="/resynchronize/docs/getting-started" target="_self">Docs</a></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="docsNavContainer" id="docsNav"><nav class="toc"><div class="toggleNav"><section class="navWrapper wrapper"><div class="navBreadcrumb wrapper"><div class="navToggle" id="navToggler"><div class="hamburger-menu"><div class="line1"></div><div class="line2"></div><div class="line3"></div></div></div><h2><i>›</i><span>Advanced</span></h2><div class="tocToggler" id="tocToggler"><i class="icon-toc"></i></div></div><div class="navGroups"><div class="navGroup"><h3 class="navGroupCategoryTitle">Introduction</h3><ul class=""><li class="navListItem"><a class="navItem" href="/resynchronize/docs/getting-started">Getting started</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">Examples</h3><ul class=""><li class="navListItem"><a class="navItem" href="/resynchronize/docs/redux-react-example">Redux + React</a></li><li class="navListItem"><a class="navItem" href="/resynchronize/docs/react-hooks-example">Reacts + Hooks</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">API</h3><ul class=""><li class="navListItem"><a class="navItem" href="/resynchronize/docs/create-actions">createAsyncActions</a></li><li class="navListItem"><a class="navItem" href="/resynchronize/docs/create-reducers">createAsyncReducer</a></li><li class="navListItem"><a class="navItem" href="/resynchronize/docs/get-async-props">getAsyncProps</a></li><li class="navListItem"><a class="navItem" href="/resynchronize/docs/getters">Getters</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">Advanced</h3><ul class=""><li class="navListItem navListItemActive"><a class="navItem" href="/resynchronize/docs/custom-reducers">Custom reducers</a></li></ul></div></div></section></div><script>
+            var coll = document.getElementsByClassName('collapsible');
+            var checkActiveCategory = true;
+            for (var i = 0; i < coll.length; i++) {
+              var links = coll[i].nextElementSibling.getElementsByTagName('*');
+              if (checkActiveCategory){
+                for (var j = 0; j < links.length; j++) {
+                  if (links[j].classList.contains('navListItemActive')){
+                    coll[i].nextElementSibling.classList.toggle('hide');
+                    coll[i].childNodes[1].classList.toggle('rotate');
+                    checkActiveCategory = false;
+                    break;
+                  }
+                }
+              }
+
+              coll[i].addEventListener('click', function() {
+                var arrow = this.childNodes[1];
+                arrow.classList.toggle('rotate');
+                var content = this.nextElementSibling;
+                content.classList.toggle('hide');
+              });
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+              createToggler('#navToggler', '#docsNav', 'docsSliderActive');
+              createToggler('#tocToggler', 'body', 'tocActive');
+
+              var headings = document.querySelector('.toc-headings');
+              headings && headings.addEventListener('click', function(event) {
+                var el = event.target;
+                while(el !== headings){
+                  if (el.tagName === 'A') {
+                    document.body.classList.remove('tocActive');
+                    break;
+                  } else{
+                    el = el.parentNode;
+                  }
+                }
+              }, false);
+
+              function createToggler(togglerSelector, targetSelector, className) {
+                var toggler = document.querySelector(togglerSelector);
+                var target = document.querySelector(targetSelector);
+
+                if (!toggler) {
+                  return;
+                }
+
+                toggler.onclick = function(event) {
+                  event.preventDefault();
+
+                  target.classList.toggle(className);
+                };
+              }
+            });
+        </script></nav></div><div class="container mainContainer docsContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 id="__docusaurus" class="postHeaderTitle">Custom reducers</h1></header><article><div><span><h1><a class="anchor" aria-hidden="true" id="when-you-want-to-manage-your-payloads-and-errors"></a><a href="#when-you-want-to-manage-your-payloads-and-errors" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>When you want to manage your payloads and errors</h1>
+<h2><a class="anchor" aria-hidden="true" id="reduce-the-payload"></a><a href="#reduce-the-payload" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Reduce the payload</h2>
+<p>In case you want to generalize the async promise <code>done</code> dispatch or you simply want to parse your results, the toolbox provides a way to alter the payload before it enters the state. To exemplify:</p>
+<pre><code class="hljs css language-javascript {7}"><span class="hljs-keyword">const</span> getList = createAsyncActions(<span class="hljs-string">'GEL_LIST'</span>)
+
+<span class="hljs-keyword">const</span> getListReducer = createAsyncReducer(
+  [],
+  {
+    [getList]: {
+      <span class="hljs-attr">done</span>: <span class="hljs-function">(<span class="hljs-params">currentPayload, action</span>) =&gt;</span> action.payload || currrentPayload
+    }
+  }
+)
+</code></pre>
+<p>The second argument of the creator can be an <em>object containing</em> the keys of your actions and <em>inside another object</em> with the properties <code>start</code>, <code>progress</code>, <code>done</code>, <code>error</code>, <code>cancel</code> and/or <code>reset</code>. Every one of this key corresponds with the different triggers of your actions.</p>
+<p>When you trigger <code>getList.done('my-paylaod')</code> on this example, your method on the <code>done</code> property will receive the current payload on your state and an action with the payload <code>'my-payload'</code>. From there you can make any changes to it and return the value you want in your payload.</p>
+<p>Of course you can manage how the payload works and its reduced in every other actions and combine them.</p>
+<pre><code class="hljs css language-javascript {6}"><span class="hljs-keyword">const</span> getListReducer = createAsyncReducer(
+  [],
+  {
+    [getList]: {
+      <span class="hljs-attr">done</span>: <span class="hljs-function">(<span class="hljs-params">currentPayload, action</span>) =&gt;</span> action.payload || currrentPayload
+      <span class="hljs-attr">error</span>: <span class="hljs-function">(<span class="hljs-params">currentPayload, action</span>) =&gt;</span> currrentPayload
+    }
+  }
+)
+</code></pre>
+<p>In this example the payload won't be nullified on error case (the default is nullify on error case). It's very important to notice that the payload in the action is always the one dispatched, in other words, <strong>all the actions share the action payload, the difference is on the reducers</strong>. On the error default case the reducer puts the payload on <code>null</code> no mather the value of the payload, because is normally an error, but on done, the error is the nullified one by default. <strong>It's up to the developer to decide any behaviour outside the default one</strong>.</p>
+<p>Now if all this customization needs to be applied to multiple async actions the only change needed is adding the key to the first config object:</p>
+<pre><code class="hljs css language-javascript {10,11,12}"><span class="hljs-keyword">const</span> getList = createAsyncActions(<span class="hljs-string">'GEL_LIST'</span>)
+<span class="hljs-keyword">const</span> getComplexList = createAsyncActions(<span class="hljs-string">'GEL_COMPLEX_LIST'</span>)
+
+<span class="hljs-keyword">const</span> getListReducer = createAsyncReducer(
+  [],
+  {
+    [getList]: {
+      <span class="hljs-attr">done</span>: <span class="hljs-function">(<span class="hljs-params">currentPayload, action</span>) =&gt;</span> action.payload || currrentPayload
+    },
+    [getComplexList]: {
+      <span class="hljs-attr">done</span>: <span class="hljs-function">(<span class="hljs-params">currentPayload, action</span>) =&gt;</span> action.payload.map(<span class="hljs-function"><span class="hljs-params">i</span> =&gt;</span> i.name) || currrentPayload
+    }
+  }
+)
+</code></pre>
+<p>Of course this two actions (both need to be async actions) could be dispatched on different moments and from different places but they will end on the same piece of state.</p>
+<h2><a class="anchor" aria-hidden="true" id="reduce-errors"></a><a href="#reduce-errors" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Reduce errors</h2>
+<p>The same scenarios that apply to the payload could also apply to the error, and again the toolbox provides a way to customize how your paylaods land there.</p>
+<pre><code class="hljs css language-javascript {10,11,12,13,14}"><span class="hljs-keyword">const</span> getList = createAsyncActions(<span class="hljs-string">'GEL_LIST'</span>)
+
+<span class="hljs-keyword">const</span> getListReducer = createAsyncReducer(
+  [],
+  { <span class="hljs-comment">// Payload reducers</span>
+    [getList]: {
+      <span class="hljs-attr">done</span>: <span class="hljs-function">(<span class="hljs-params">currentPayload, action</span>) =&gt;</span> action.payload || currrentPayload
+    }
+  },
+  { <span class="hljs-comment">// Error reducers</span>
+    [getList]: {
+      <span class="hljs-attr">done</span>: <span class="hljs-function">(<span class="hljs-params">currentPayload, action</span>) =&gt;</span> action.payload || currrentPayload
+    }
+  }
+)
+</code></pre>
+<p>The same rules that apply to the <code>payload</code> config apply to the <code>error</code> one, the only difference is where this payload ends. If on the payload reducers the content ended on the <code>payload</code> section of the state, the error reducer sends it to the <code>error</code> section.</p>
+<p>Again all the actions share the action paylod but normally they dont apply because the default reducer for actions that are not of the error type (like <code>error</code> and <code>cancel</code>), reduce the error state to <code>null</code>. This means that both <code>payload</code> and <code>error</code> are <strong>reduced at the same time for all actions</strong>.</p>
+</span></div></article></div><div class="docs-prevnext"><a class="docs-prev button" href="/resynchronize/docs/getters"><span class="arrow-prev">← </span><span>Getters</span></a></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#reduce-the-payload">Reduce the payload</a></li><li><a href="#reduce-errors">Reduce errors</a></li></ul></nav></div><footer class="nav-footer" id="footer"><section class="sitemap"><a href="/resynchronize/" class="nav-home"><img src="/resynchronize/img/logo.png" alt="Resynchronize" width="66" height="58"/></a><div><h5>Docs</h5><a href="/resynchronize/docs/en/getting-started.html">Getting Started</a><a href="/resynchronize/docs/en/create-actions.html">API Reference</a></div><div><h5>Community</h5><a href="/resynchronize/en/users.html">User Showcase</a></div><div><h5>More</h5><a href="https://github.com/infonl/resynchronize">GitHub</a><a class="github-button" href="https://github.com/infonl/resynchronize" data-icon="octicon-star" data-count-href="/infonl.github.io/resynchronize/stargazers" data-show-count="true" data-count-aria-label="# stargazers on GitHub" aria-label="Star this project on GitHub">Star</a></div></section><a href="https://opensource.facebook.com/" target="_blank" rel="noreferrer noopener" class="fbOpenSource"><img src="/resynchronize/img/oss_logo.png" alt="Facebook Open Source" width="170" height="45"/></a><section class="copyright">Copyright © 2020 Marcos Agustin Miani</section></footer></div></body></html>

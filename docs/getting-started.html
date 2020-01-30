@@ -1,0 +1,174 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>Getting started · Resynchronize</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="# The beggining"/><meta name="docsearch:language" content="en"/><meta property="og:title" content="Getting started · Resynchronize"/><meta property="og:type" content="website"/><meta property="og:url" content="https://infonl.github.io//resynchronize/"/><meta property="og:description" content="# The beggining"/><meta property="og:image" content="https://infonl.github.io//resynchronize/img/undraw_online.svg"/><meta name="twitter:card" content="summary"/><meta name="twitter:image" content="https://infonl.github.io//resynchronize/img/undraw_tweetstorm.svg"/><link rel="shortcut icon" href="/resynchronize/img/logo.png"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css"/><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><script src="/resynchronize/js/scrollSpy.js"></script><link rel="stylesheet" href="/resynchronize/css/main.css"/><script src="/resynchronize/js/codetabs.js"></script></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/resynchronize/"><img class="logo" src="/resynchronize/img/logo.png" alt="Resynchronize"/><h2 class="headerTitleWithLogo">Resynchronize</h2></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class="siteNavGroupActive siteNavItemActive"><a href="/resynchronize/docs/getting-started" target="_self">Docs</a></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="docsNavContainer" id="docsNav"><nav class="toc"><div class="toggleNav"><section class="navWrapper wrapper"><div class="navBreadcrumb wrapper"><div class="navToggle" id="navToggler"><div class="hamburger-menu"><div class="line1"></div><div class="line2"></div><div class="line3"></div></div></div><h2><i>›</i><span>Introduction</span></h2><div class="tocToggler" id="tocToggler"><i class="icon-toc"></i></div></div><div class="navGroups"><div class="navGroup"><h3 class="navGroupCategoryTitle">Introduction</h3><ul class=""><li class="navListItem navListItemActive"><a class="navItem" href="/resynchronize/docs/getting-started">Getting started</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">Examples</h3><ul class=""><li class="navListItem"><a class="navItem" href="/resynchronize/docs/redux-react-example">Redux + React</a></li><li class="navListItem"><a class="navItem" href="/resynchronize/docs/react-hooks-example">Reacts + Hooks</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">API</h3><ul class=""><li class="navListItem"><a class="navItem" href="/resynchronize/docs/create-actions">createAsyncActions</a></li><li class="navListItem"><a class="navItem" href="/resynchronize/docs/create-reducers">createAsyncReducer</a></li><li class="navListItem"><a class="navItem" href="/resynchronize/docs/get-async-props">getAsyncProps</a></li><li class="navListItem"><a class="navItem" href="/resynchronize/docs/getters">Getters</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">Advanced</h3><ul class=""><li class="navListItem"><a class="navItem" href="/resynchronize/docs/custom-reducers">Custom reducers</a></li></ul></div></div></section></div><script>
+            var coll = document.getElementsByClassName('collapsible');
+            var checkActiveCategory = true;
+            for (var i = 0; i < coll.length; i++) {
+              var links = coll[i].nextElementSibling.getElementsByTagName('*');
+              if (checkActiveCategory){
+                for (var j = 0; j < links.length; j++) {
+                  if (links[j].classList.contains('navListItemActive')){
+                    coll[i].nextElementSibling.classList.toggle('hide');
+                    coll[i].childNodes[1].classList.toggle('rotate');
+                    checkActiveCategory = false;
+                    break;
+                  }
+                }
+              }
+
+              coll[i].addEventListener('click', function() {
+                var arrow = this.childNodes[1];
+                arrow.classList.toggle('rotate');
+                var content = this.nextElementSibling;
+                content.classList.toggle('hide');
+              });
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+              createToggler('#navToggler', '#docsNav', 'docsSliderActive');
+              createToggler('#tocToggler', 'body', 'tocActive');
+
+              var headings = document.querySelector('.toc-headings');
+              headings && headings.addEventListener('click', function(event) {
+                var el = event.target;
+                while(el !== headings){
+                  if (el.tagName === 'A') {
+                    document.body.classList.remove('tocActive');
+                    break;
+                  } else{
+                    el = el.parentNode;
+                  }
+                }
+              }, false);
+
+              function createToggler(togglerSelector, targetSelector, className) {
+                var toggler = document.querySelector(togglerSelector);
+                var target = document.querySelector(targetSelector);
+
+                if (!toggler) {
+                  return;
+                }
+
+                toggler.onclick = function(event) {
+                  event.preventDefault();
+
+                  target.classList.toggle(className);
+                };
+              }
+            });
+        </script></nav></div><div class="container mainContainer docsContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 id="__docusaurus" class="postHeaderTitle">Getting started</h1></header><article><div><span><h1><a class="anchor" aria-hidden="true" id="the-beggining"></a><a href="#the-beggining" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>The beggining</h1>
+<h2><a class="anchor" aria-hidden="true" id="install"></a><a href="#install" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Install</h2>
+<p>Copy and run this in your project folder</p>
+<pre><code class="hljs css language-shell">npm i --save resynchronize
+</code></pre>
+<h2><a class="anchor" aria-hidden="true" id="create-actions"></a><a href="#create-actions" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Create actions</h2>
+<p>Create your async actions, the returned object will contain different actions inside that can be used to set the steps of your async functions.</p>
+<pre><code class="hljs css language-javascript"><span class="hljs-comment">// my-actions.js</span>
+<span class="hljs-keyword">import</span> { createAsyncActions } <span class="hljs-keyword">from</span> <span class="hljs-string">'resynchronize'</span>
+<span class="hljs-keyword">const</span> getList = createAsyncActions(<span class="hljs-string">'GEL_LIST'</span>)
+</code></pre>
+<h2><a class="anchor" aria-hidden="true" id="dispatch-the-actions-on-the-right-moment"></a><a href="#dispatch-the-actions-on-the-right-moment" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Dispatch the actions on the right moment</h2>
+<p>Use your created actions to set the right status on the right moment of your requests</p>
+<h3><a class="anchor" aria-hidden="true" id="basic-example"></a><a href="#basic-example" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Basic example</h3>
+<pre><code class="hljs css language-javascript {6,9,12}"><span class="hljs-comment">// my-actions.js</span>
+<span class="hljs-comment">// Could be redux, or could be something else as far as you can get the state from it</span>
+<span class="hljs-keyword">import</span> store <span class="hljs-keyword">from</span> <span class="hljs-string">'./my-store.js'</span>
+
+<span class="hljs-keyword">const</span> myGetList = <span class="hljs-function">(<span class="hljs-params">dispatch</span>) =&gt;</span> {
+  dispatch(getList.start()) <span class="hljs-comment">// Loading starts</span>
+  fetch(<span class="hljs-string">'/api/list'</span>)
+    .then(<span class="hljs-function"><span class="hljs-params">data</span> =&gt;</span> {
+      dispatch(getList.done(data)) <span class="hljs-comment">// The async action is done</span>
+    })
+    .catch(<span class="hljs-function"><span class="hljs-params">ex</span> =&gt;</span> {
+      dispatch(getList.error(ex)) <span class="hljs-comment">// The async action failed</span>
+    })
+
+}
+</code></pre>
+<h3><a class="anchor" aria-hidden="true" id="other-example"></a><a href="#other-example" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Other example</h3>
+<p>Anything that you have to wait for it can be expressed with the async actions</p>
+<pre><code class="hljs css language-javascript {6,8}"><span class="hljs-comment">// my-actions.js</span>
+<span class="hljs-comment">// Could be redux, or could be something else as far as you can get the state from it</span>
+<span class="hljs-keyword">import</span> store <span class="hljs-keyword">from</span> <span class="hljs-string">'./my-store.js'</span>
+
+<span class="hljs-keyword">const</span> myGetList = <span class="hljs-function">(<span class="hljs-params">dispatch</span>) =&gt;</span> {
+  dispatch(getList.start()) <span class="hljs-comment">// Loading starts</span>
+  setTimeOut(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+    dispatch(getList.done(<span class="hljs-string">'the wait is over!'</span>)) <span class="hljs-comment">// The async action is done</span>
+  }, <span class="hljs-number">1000</span>)
+}
+</code></pre>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="create-reducers"></a><a href="#create-reducers" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Create reducers</h2>
+<p>All this actions will trigger state changes thru a reducer, you can always use the action object to tackle the different moments yourself, but to simplify it even more you can use the creator function.</p>
+<pre><code class="hljs css language-javascript"><span class="hljs-comment">// my-reducers.js</span>
+<span class="hljs-keyword">import</span> { createAsyncReducer } <span class="hljs-keyword">from</span> <span class="hljs-string">'resynchronize'</span>
+<span class="hljs-keyword">import</span> { getList } <span class="hljs-keyword">from</span> <span class="hljs-string">'./my-actions.js'</span>
+
+<span class="hljs-comment">// Simple implementation</span>
+<span class="hljs-keyword">const</span> getListReducer = createAsyncReducer(
+  [],
+  getList
+)
+</code></pre>
+<p>Combinable with other actions</p>
+<pre><code class="hljs css language-javascript"><span class="hljs-keyword">const</span> getListReducer = createAsyncReducer(
+  [],
+  { getList }
+)
+</code></pre>
+<p>Custom reducers for the different parts, we will go there eventually dont worry</p>
+<pre><code class="hljs css language-javascript"><span class="hljs-keyword">const</span> getListReducer = createAsyncReducer(
+  [],
+  {
+    [getList]: {
+      <span class="hljs-attr">done</span>: <span class="hljs-function">(<span class="hljs-params">currentPayload, action</span>) =&gt;</span> action.payload || currrentPayload
+    }
+  }
+)
+</code></pre>
+<h2><a class="anchor" aria-hidden="true" id="get-payload-and-check-status"></a><a href="#get-payload-and-check-status" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Get payload and check status</h2>
+<p>With the actions being reduced, the next step is using this async state on your code. You can always use it raw, the shape of the state will be consistent if you use the creators, but again to simplify our logic and controls you can use the getters and be completely sure that no matter what internal changes could happen on the internals, it will be reliable.</p>
+<h3><a class="anchor" aria-hidden="true" id="quick-checks"></a><a href="#quick-checks" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Quick checks</h3>
+<p>Simple and quick way to obtain the async state, it will contain the status object with all the status on boolean shape, the payload (as you set it on your dispatchs) and the error (same as payload)</p>
+<pre><code class="hljs css language-javascript"><span class="hljs-comment">// my-reducers.js</span>
+<span class="hljs-keyword">import</span> { getAsyncProps } <span class="hljs-keyword">from</span> <span class="hljs-string">'resynchronize'</span>
+<span class="hljs-comment">// Could be redux, or could be something else as far as you can get the state from it</span>
+<span class="hljs-keyword">import</span> store <span class="hljs-keyword">from</span> <span class="hljs-string">'./my-store.js'</span>
+
+<span class="hljs-keyword">const</span> state = store.getState()
+<span class="hljs-keyword">const</span> list = getAsyncProps(state.list)
+<span class="hljs-comment">/*
+list = {
+  status: {
+    done: false,
+    loading: false,
+    cancelled: false,
+    error: false
+  },
+  payload: [],
+  error: null
+}
+*/</span>
+</code></pre>
+<h3><a class="anchor" aria-hidden="true" id="individual-checks"></a><a href="#individual-checks" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Individual checks</h3>
+<p>In case you don't need all the object, just basic checks, you can use the individual getters.</p>
+<pre><code class="hljs css language-javascript"><span class="hljs-comment">// my-reducers.js</span>
+<span class="hljs-keyword">import</span> { isDone, isLoading, isCancelled, hasError, getError, getPayload } <span class="hljs-keyword">from</span> <span class="hljs-string">'resynchronize'</span>
+<span class="hljs-comment">// Could be redux, or could be something else as far as you can get the state from it</span>
+<span class="hljs-keyword">import</span> store <span class="hljs-keyword">from</span> <span class="hljs-string">'./my-store.js'</span>
+
+<span class="hljs-keyword">const</span> state = store.getState()
+<span class="hljs-keyword">const</span> done = isDone(state.list)
+<span class="hljs-keyword">const</span> loading = isLoading(state.list)
+<span class="hljs-keyword">const</span> cancelled = isCancelled(state.list)
+<span class="hljs-keyword">const</span> someError = hasError(state.list)
+<span class="hljs-keyword">const</span> theErrorObject = getError(state.list)
+<span class="hljs-keyword">const</span> payload = getPayload(state.list)
+</code></pre>
+<hr>
+<h2><a class="anchor" aria-hidden="true" id="connect"></a><a href="#connect" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Connect?</h2>
+<p>Now, we need to use this to render something right? check the examples</p>
+<ul>
+<li><a href="/resynchronize/docs/redux-react-example">Redux + React example</a></li>
+</ul>
+</span></div></article></div><div class="docs-prevnext"><a class="docs-next button" href="/resynchronize/docs/redux-react-example"><span>Redux + React</span><span class="arrow-next"> →</span></a></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#install">Install</a></li><li><a href="#create-actions">Create actions</a></li><li><a href="#dispatch-the-actions-on-the-right-moment">Dispatch the actions on the right moment</a><ul class="toc-headings"><li><a href="#basic-example">Basic example</a></li><li><a href="#other-example">Other example</a></li></ul></li><li><a href="#create-reducers">Create reducers</a></li><li><a href="#get-payload-and-check-status">Get payload and check status</a><ul class="toc-headings"><li><a href="#quick-checks">Quick checks</a></li><li><a href="#individual-checks">Individual checks</a></li></ul></li><li><a href="#connect">Connect?</a></li></ul></nav></div><footer class="nav-footer" id="footer"><section class="sitemap"><a href="/resynchronize/" class="nav-home"><img src="/resynchronize/img/logo.png" alt="Resynchronize" width="66" height="58"/></a><div><h5>Docs</h5><a href="/resynchronize/docs/en/getting-started.html">Getting Started</a><a href="/resynchronize/docs/en/create-actions.html">API Reference</a></div><div><h5>Community</h5><a href="/resynchronize/en/users.html">User Showcase</a></div><div><h5>More</h5><a href="https://github.com/infonl/resynchronize">GitHub</a><a class="github-button" href="https://github.com/infonl/resynchronize" data-icon="octicon-star" data-count-href="/infonl.github.io/resynchronize/stargazers" data-show-count="true" data-count-aria-label="# stargazers on GitHub" aria-label="Star this project on GitHub">Star</a></div></section><a href="https://opensource.facebook.com/" target="_blank" rel="noreferrer noopener" class="fbOpenSource"><img src="/resynchronize/img/oss_logo.png" alt="Facebook Open Source" width="170" height="45"/></a><section class="copyright">Copyright © 2020 Marcos Agustin Miani</section></footer></div></body></html>
