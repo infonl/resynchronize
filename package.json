@@ -23,6 +23,7 @@
     "test:cov-watch": "npm test -- --coverage --watch",
     "check": "npm run lint && npm run test",
     "build": "npm run check && rollup -c",
+    "publish": "npm publish",
     "stryker": "stryker run"
   },
   "husky": {
