@@ -128,5 +128,5 @@ const payload = getPayload(state.list)
 ---
 ## Connect?
 Now, we need to use this to render something right? check the examples
-- [Redux + React example](redux-react-example.md)
+- [Redux + React example](https://infonl.github.io/resynchronize/docs/redux-react-example)
 
