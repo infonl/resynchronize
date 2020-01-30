@@ -5,6 +5,8 @@ import { createReducer, getStateShape } from './utils'
 /** default reducer for async handling */
 const defaultReducer = (state = null, { payload = null } = {}) => payload || state
 
+const initialValueReducer = initialValue => () => initialValue || null
+
 const nullifierReducer = () => null
 
 /**
@@ -67,8 +69,9 @@ const handleCancel = (payloadReducer = nullifierReducer, errorReducer) =>
   getAsyncNodeReducer(CANCELLED, payloadReducer, errorReducer)
 
 // @TODO to initial value??
-const handleReset = (payloadReducer = nullifierReducer, errorReducer = nullifierReducer) =>
-  getAsyncNodeReducer(INITIAL, payloadReducer, errorReducer)
+const handleReset = (initialPayload) =>
+  (payloadReducer = initialValueReducer(initialPayload), errorReducer = nullifierReducer) =>
+    getAsyncNodeReducer(INITIAL, payloadReducer, errorReducer)
 
 /**
  * Basic action handler creator for async actions
@@ -76,13 +79,13 @@ const handleReset = (payloadReducer = nullifierReducer, errorReducer = nullifier
  * @param {object} payloadReducers Object with a key for every reducer on every state
  * @param {object} errorReducers Object with a key for every reducer on every state
  */
-const createActionsHandler = (actions, payloadReducers = {}, errorReducers = {}) => ({
+const createActionsHandler = (initialPayload, actions, payloadReducers = {}, errorReducers = {}) => ({
   [actions.start]: handleStart(payloadReducers.start, errorReducers.start),
   [actions.progress]: handleProgress(payloadReducers.progress, errorReducers.flush),
   [actions.done]: handleDone(payloadReducers.done, errorReducers.done),
   [actions.error]: handleError(payloadReducers.error, errorReducers.error),
   [actions.cancel]: handleCancel(payloadReducers.cancel, errorReducers.cancel),
-  [actions.reset]: handleReset(payloadReducers.reset, errorReducers.reset)
+  [actions.reset]: handleReset(initialPayload)(payloadReducers.reset, errorReducers.reset)
 })
 
 /**
@@ -136,7 +139,7 @@ const mergeHandlers = (payload, error) => {
  * @param {*} errorHandlers Set of actions that include every state of a fetch process
  * @returns {object} config to be used on a reducer
  */
-const createAsyncReducerConfig = (payloadHandlers, errorHandlers = {}) => {
+const createAsyncReducerConfig = (initialPayload, payloadHandlers, errorHandlers = {}) => {
   const formattedPayloadHandlers = formatHandler(payloadHandlers)
   const formattedErrorHandlers = formatHandler(errorHandlers)
 
@@ -148,6 +151,7 @@ const createAsyncReducerConfig = (payloadHandlers, errorHandlers = {}) => {
       return {
         ...config,
         ...createActionsHandler(
+          initialPayload,
           getAsyncKeys(asyncKey),
           payloadHandler,
           errorHandler
@@ -167,7 +171,7 @@ const createAsyncReducerConfig = (payloadHandlers, errorHandlers = {}) => {
 const createAsyncReducer = (initialPayload, payloadHandlers, errorHandlers) =>
   createReducer(
     getStateShape(INITIAL, initialPayload, null),
-    createAsyncReducerConfig(payloadHandlers, errorHandlers)
+    createAsyncReducerConfig(initialPayload, payloadHandlers, errorHandlers)
   )
 
 /*

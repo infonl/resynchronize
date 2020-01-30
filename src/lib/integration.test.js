@@ -201,14 +201,25 @@ describe('Integration tests', () => {
     })
 
     describe('with state after error', () => {
-      const state = reducer(undefined, actions.error('payload'))
+      const state = reducer('initial-something', actions.error('payload'))
       expectDefault(state, reducer)
       expectStart(state, reducer, actions, 'start-payload', 'start-payload', null)
       expectProgress(state, reducer, actions, 'test-progress', 'test-progress', null)
       expectDone(state, reducer, actions, 'test-payload', 'test-payload', null)
       expectError(state, reducer, actions, 'test-error', null, 'test-error')
       expectCancel(state, reducer, actions, 'test-cancelled', null, 'test-cancelled')
-      expectReset(state, reducer, actions, undefined, null, null)
+      expectReset(state, reducer, actions, 'initial-something', null, null)
+    })
+
+    describe('with state after reset', () => {
+      const state = reducer('initial-something', actions.reset('payload'))
+      expectDefault(state, reducer)
+      expectStart(state, reducer, actions, 'start-payload', 'start-payload', null)
+      expectProgress(state, reducer, actions, 'test-progress', 'test-progress', null)
+      expectDone(state, reducer, actions, 'test-payload', 'test-payload', null)
+      expectError(state, reducer, actions, 'test-error', null, 'test-error')
+      expectCancel(state, reducer, actions, 'test-cancelled', null, 'test-cancelled')
+      expectReset(state, reducer, actions, 'initial-something', null, null)
     })
   })
 
@@ -295,6 +306,17 @@ describe('Integration tests', () => {
       expectError(state, reducer, actions, 'test-error', null, 'error:test-error')
       expectCancel(state, reducer, actions, 'test-cancelled', null, 'why:test-cancelled')
       expectReset(state, reducer, actions, undefined, null, null)
+    })
+
+    describe('with state after reset', () => {
+      const state = reducer('initial-something', actions.reset('payload'))
+      expectDefault(state, reducer)
+      expectStart(state, reducer, actions, 'start-payload', 'start-payload', null)
+      expectProgress(state, reducer, actions, 'test-progress', 'test-progress', null)
+      expectDone(state, reducer, actions, 'test-payload', 'test-payload+extra', null)
+      expectError(state, reducer, actions, 'test-error', null, 'error:test-error')
+      expectCancel(state, reducer, actions, 'test-cancelled', null, 'why:test-cancelled')
+      expectReset(state, reducer, actions, 'initial-something', null, null)
     })
   })
 })
